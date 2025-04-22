@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Auth;
+use Hash;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -21,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
+        'status'
     ];
 
     /**
@@ -41,4 +46,57 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function assignees(): HasMany
+    {
+        return $this->hasMany(Assignee::class);
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class);
+    }
+
+    public function permisstionUsers(): HasMany
+    {
+        return $this->hasMany(PermissionUser::class);
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function taskHistorys(): HasMany
+    {
+        return $this->hasMany(TaskHistory::class);
+    }
+
+    public static function register(array $data)
+    {
+        return self::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'is_admin' => false,
+            'status' => 'active',
+        ]);
+    }
+
+    public static function login(array $credentials): bool
+    {
+        $user = self::where('email', $credentials['email'])->first();
+        if ($user && $user->status !== 'active') {
+            return false; 
+        }
+
+        return Auth::attempt($credentials);
+    }
+
+
 }
