@@ -1,3 +1,4 @@
-<div>
-    <!-- People find pleasure in different ways. I find it in keeping my mind clear. - Marcus Aurelius -->
-</div>
+<form action="{{ route('logout') }}" method="POST" style="display: inline;">
+    @csrf
+    <button type="submit" class="btn btn-danger">Đăng xuất</button>
+</form>

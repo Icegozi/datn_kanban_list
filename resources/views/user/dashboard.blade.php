@@ -1,3 +1,4 @@
-<div>
-    <!-- Act only according to that maxim whereby you can, at the same time, will that it should become a universal law. - Immanuel Kant -->
-</div>
+<form action="{{ route('logout') }}" method="POST" style="display: inline;">
+    @csrf
+    <button type="submit" class="btn btn-danger">Đăng xuất</button>
+</form>

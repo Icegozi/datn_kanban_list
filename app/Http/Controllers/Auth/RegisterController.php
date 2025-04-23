@@ -16,10 +16,14 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $user = User::register($request->only('name', 'email', 'password'));
-        auth()->login($user);
-
-        return redirect()->route('user.dashboard');
+        try {
+            User::register($request->only('name', 'email', 'password'));
+            session()->flash('success', 'Đăng ký thành công, bạn có thể đăng nhập ngay!');
+            return redirect()->route('login'); 
+        } catch (\Exception $e) {
+            session()->flash('error', 'Đã có lỗi xảy ra, vui lòng thử lại!');
+            return redirect()->back();
+        }
     }
 
 }

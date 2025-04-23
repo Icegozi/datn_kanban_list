@@ -91,12 +91,22 @@ class User extends Authenticatable
     public static function login(array $credentials): bool
     {
         $user = self::where('email', $credentials['email'])->first();
-        if ($user && $user->status !== 'active') {
-            return false; 
+
+        if (!$user || $user->status !== 'active') {
+            return false;
         }
 
-        return Auth::attempt($credentials);
+        if (Auth::attempt($credentials)) {
+            session()->regenerate();
+            return true;
+        }
+
+        return false;
     }
-
-
+    public static function logout()
+    {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+    }
 }
