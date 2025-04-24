@@ -88,7 +88,23 @@ class User extends Authenticatable
         ]);
     }
 
-    public static function login(array $credentials): bool
+    // public static function login(array $credentials): bool
+    // {
+    //     $user = self::where('email', $credentials['email'])->first();
+
+    //     if (!$user || $user->status !== 'active') {
+    //         return false;
+    //     }
+
+    //     if (Auth::attempt($credentials)) {
+    //         session()->regenerate();
+    //         return true;
+    //     }
+
+    //     return false;
+    // }
+
+    public static function login(array $credentials, bool $remember = false): bool
     {
         $user = self::where('email', $credentials['email'])->first();
 
@@ -96,13 +112,14 @@ class User extends Authenticatable
             return false;
         }
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember)) {
             session()->regenerate();
             return true;
         }
 
         return false;
     }
+
     public static function logout()
     {
         Auth::logout();

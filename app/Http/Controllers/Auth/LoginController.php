@@ -16,8 +16,9 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
+        $remember = $request->has('remember');
 
-        if (User::login($credentials)) {
+        if (User::login($credentials,$remember)) {
             $user = Auth::user();
 
             if ($user->is_admin) {
