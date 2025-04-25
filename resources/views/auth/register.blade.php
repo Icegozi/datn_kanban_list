@@ -4,7 +4,7 @@
 
 @section('content')
   <div class="register-box">
-    <div class="card card-outline card-primary">
+    <div class="card card-outline card-secondary">
     <div class="card-header text-center">
       <a href="#" class="h1"><b>My</b>App</a>
     </div>
@@ -43,13 +43,17 @@
       </div>
 
       <div class="row">
-        <div class="col-6">
-        <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
+        <div class="col-md-6 mb-2">
+          <button type="submit" class="btn btn-dark btn-block font-weight-bold">
+            Đăng ký
+          </button>
         </div>
-        <div class="col-6 text-right mt-1">
-        <a href="{{ route('login.form') }}" class="text-center">Tôi đã có tài khoản</a>
+        <div class="col-md-6 d-flex align-items-center justify-content-md-end justify-content-center">
+          <a href="{{ route('login.form') }}" class="text-dark" style="text-decoration: none;">
+            Tôi đã có tài khoản
+          </a>
         </div>
-      </div>
+      </div>  
       </form>
 
     </div>

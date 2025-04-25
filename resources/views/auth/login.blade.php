@@ -4,7 +4,7 @@
 
 @section('content')
   <div class="login-box">
-    <div class="card card-outline card-primary">
+    <div class="card card-outline card-secondary">
     <div class="card-header text-center">
       <a href="#" class="h1"><b>My</b>App</a>
     </div>
@@ -45,16 +45,16 @@
         </div>
 
         <div class="col-5 text-end">
-          <button type="submit" class="btn btn-primary">Đăng nhập</button>
+          <button type="submit" class="btn btn-dark btn-block font-weight-bold">Đăng nhập</button>
         </div>
         </div>
       </form>
 
       <p class="mb-1 mt-3">
-        <a href="#">Quên mật khẩu?</a>
+        <a href="#" class="text-dark" style="text-decoration: none;">Quên mật khẩu?</a>
       </p>
       <p class="mb-0">
-        <a href="{{ route('register') }}" class="text-center">Chưa có tài khoản? Đăng ký</a>
+        <a href="{{ route('register') }}" class="text-dark" style="text-decoration: none;">Chưa có tài khoản? Đăng ký</a>
       </p>
       </div>
     </div>
