@@ -21,7 +21,7 @@
       </div>
 
       <div class="input-group mb-3">
-        <input type="email" class="form-control" name="email" placeholder="Email" value="{{ old('email') }}" required>
+        <input type="email" class="form-control" name="email" placeholder="Email" value="{{ old('email', request('email')) }}" required>
         <div class="input-group-append">
         <div class="input-group-text h-100"><span class="fas fa-envelope"></span></div>
         </div>

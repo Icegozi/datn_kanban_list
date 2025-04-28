@@ -24,7 +24,7 @@ $(document).ready(function () {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      filter: brightness(0.75);
+      filter: brightness(0.5);
     }
 
     #video-overlay {

@@ -16,14 +16,14 @@
   <link rel="stylesheet" href="{{ asset('plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
 
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
 
   <!-- jquery -->
   <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
 
   {{-- js --}}
-  <script>window.bgVideoUrl = "{{ asset('dist/assets/vid/bg_auth.mp4') }}";</script>
-  <script src="{{ asset('dist/js/auth.js') }}""></script>
+  <script>window.bgVideoUrl = "{{ asset('assets/vid/bg_auth.mp4') }}";</script>
+  <script src="{{ asset('assets/js/auth.js') }}""></script>
 </head>
 
 <body class="hold-transition register-page">
