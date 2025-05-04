@@ -4,19 +4,6 @@
 
 @section('content')
 
-    <header id="header-top" class="header-top">
-        <ul>
-            <li class="head-responsive-right pull-right">
-                <div class="header-top-right">
-                    <ul>
-
-                    </ul>
-                </div>
-            </li>
-        </ul>
-
-    </header>
-
     <section class="top-area">
         <div class="header-area">
             <nav class="navbar navbar-default bootsnav navbar-sticky navbar-scrollspy" data-minus-value-desktop="70"
@@ -29,7 +16,7 @@
                             <i class="fa fa-bars"></i>
                         </button>
 
-                        <a class="navbar-brand" href="{{route('webcome')}}">My<span>App</span></a>
+                        <a class="navbar-brand" href="{{route('welcome')}}">My<span>App</span></a>
 
                     </div>
 
@@ -54,28 +41,28 @@
 
 
     <section id="home" class="welcome-hero">
+        <video autoplay muted loop playsinline id="bg-video">
+            <source src="{{asset('assets/vid/banner_welcome.mp4')}}" type="video/mp4">
+            Trình duyệt của bạn không hỗ trợ video nền.
+        </video>
+    
         <div class="container">
             <div class="welcome-hero-txt">
                 <h2>Trực quan hóa Luồng công việc & Tăng năng suất</h2>
                 <p>
-                    MyApp giúp bạn quản lý công việc, cộng tác với nhóm và hoàn thành nhiều việc hơn. Đơn giản, trực quan,
-                    hiệu quả.
+                    MyApp giúp bạn quản lý công việc, cộng tác với nhóm và hoàn thành nhiều việc hơn. Đơn giản, trực quan, hiệu quả.
                 </p>
             </div>
             <div class="welcome-hero-serch-box">
-
                 <div class="welcome-hero-serch" style="width:100%; text-align:center;">
                     <button class="welcome-hero-btn" onclick="window.location.href='{{ route('register.form') }}'">
-
                         Bắt đầu Miễn phí <i data-feather="arrow-right-circle"></i>
                     </button>
-                    <!-- Tùy chọn: Thêm nút/liên kết phụ -->
-                    <!-- <p style="margin-top: 15px;"><a href="#howitworks" class="scroll">Tìm hiểu thêm</a></p> -->
                 </div>
             </div>
         </div>
-
     </section>
+    
 
 
     <section id="features" class="list-topics">
@@ -156,9 +143,7 @@
                                 Nhanh chóng đăng ký và thiết lập một bảng cho dự án hoặc luồng công việc nhóm của bạn. Chọn
                                 mẫu hoặc bắt đầu mới.
                             </p>
-                            <button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
-                                tìm hiểu thêm
-                            </button>
+                            
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6">
@@ -171,9 +156,7 @@
                                 Tạo thẻ công việc, gán chúng cho thành viên nhóm, đặt hạn chót và thêm chi tiết. Kéo và thả
                                 để quản lý tiến độ.
                             </p>
-                            <button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
-                                tìm hiểu thêm
-                            </button>
+                            
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6">
@@ -186,9 +169,7 @@
                                 Bình luận trên công việc, đính kèm tệp và nhận thông báo. Giám sát hiệu quả luồng công việc
                                 và xác định điểm nghẽn.
                             </p>
-                            <button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
-                                tìm hiểu thêm
-                            </button>
+                            
                         </div>
                     </div>
                 </div>

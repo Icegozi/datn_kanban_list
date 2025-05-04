@@ -50,10 +50,7 @@
         </div>
       </form>
 
-      <p class="mb-1 mt-3">
-        <a href="#" class="text-dark" style="text-decoration: none;">Quên mật khẩu?</a>
-      </p>
-      <p class="mb-0">
+      <p class="mb-0 mt-3">
         <a href="{{ route('register') }}" class="text-dark" style="text-decoration: none;">Chưa có tài khoản? Đăng ký</a>
       </p>
       </div>

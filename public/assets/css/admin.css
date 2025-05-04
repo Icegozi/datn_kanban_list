@@ -1,0 +1,403 @@
+/* Sidebar */
+.nav-link {
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.nav-link.active {
+    background-color: #0b0b0b !important;
+    color: white;
+}
+
+a.navbar-brand,
+a.navbar-brand:hover,
+a.navbar-brand:focus {
+    display: inline-block;
+    color: #1b1e20;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.navbar-brand span {
+    display: inline-block;
+    color: #ff545a;
+    text-transform: capitalize;
+}
+
+/* Topbar */
+.main-header {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0 !important;
+}
+
+.main-header.navbar {
+    background-color: #0f0b0b;
+    color: #ffffff;
+
+
+}
+
+.main-header.navbar .nav-link,
+.main-header.navbar .navbar-brand,
+.main-header.navbar .nav-item a {
+    color: #ffffff !important;
+}
+
+.main-header.navbar .nav-link:hover,
+.main-header.navbar .navbar-brand:hover,
+.main-header.navbar .nav-item a:hover {
+    color: #ff545a !important;
+    cursor: pointer;
+}
+
+.main-header.navbar .navbar-brand span {
+    color: #ff545a;
+}
+
+/*-------------------------------------
+        12. Footer
+--------------------------------------*/
+/* Footer chỉnh sửa */
+.footer {
+    background-color: #0f0b0b;
+    /* nền sáng */
+    padding: 30px 0 10px 0;
+    border-top: 1px solid #e1e5eb;
+    /* viền trên nhẹ */
+    color: #6c757d;
+    /* màu chữ trung tính */
+    font-size: 14px;
+
+}
+
+.hm-footer-copyright p,
+.hm-footer-copyright p a {
+    margin: 0;
+    color: #6c757d;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+.footer-social {
+    text-align: right;
+}
+
+.footer-social a,
+.footer-social span {
+    display: inline-block;
+    color: #6c757d;
+    font-size: 14px;
+    margin-left: 15px;
+    transition: all 0.3s ease;
+}
+
+.footer-social a {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    background: #dee2e6;
+    /* nền xám sáng hơn */
+    text-align: center;
+    border-radius: 50%;
+}
+
+.footer-social a:hover {
+    background: #ff545a;
+    /* hover nền đỏ */
+    color: #fff;
+    /* hover chữ trắng */
+}
+
+.footer-social span:hover {
+    color: #ff545a;
+    /* hover đổi màu email */
+}
+
+.footer .container {
+    max-width: 1140px;
+}
+
+/* Layout wrapper để footer luôn dưới cùng */
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    flex: 1;
+    padding: 20px;
+    background: #ffffff;
+}
+
+
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-wrapper {
+    flex: 1;
+    padding: 20px;
+    background: #fff;
+}
+
+
+/* Con cừu phía trên */
+.sheep-wrapper {
+    position: absolute;
+    top: 10%;
+    left: 65%;
+    cursor: grab;
+    z-index: 10;
+}
+
+.sheep {
+    position: relative;
+    width: 60px;
+    height: 50px;
+}
+
+.wool {
+    width: 100%;
+    height: 36px;
+    background: #fff;
+    border-radius: 50% 50% 40% 40%;
+    border: 1px solid #ccc;
+    position: relative;
+    z-index: 2;
+}
+
+.face {
+    width: 40px;
+    height: 30px;
+    background: #fbe7d2;
+    border-radius: 50%;
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    border: 1px solid #ccc;
+}
+
+.eye {
+    width: 4px;
+    height: 4px;
+    background: #333;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+}
+
+.eye.left {
+    left: 10px;
+}
+
+.eye.right {
+    right: 10px;
+}
+
+.cheek {
+    width: 6px;
+    height: 6px;
+    background: pink;
+    border-radius: 50%;
+    position: absolute;
+    top: 15px;
+}
+
+.cheek.left {
+    left: 6px;
+}
+
+.cheek.right {
+    right: 6px;
+}
+
+.mouth {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 6px;
+    border-bottom: 2px solid #333;
+    border-radius: 0 0 50% 50%;
+    transition: all 0.3s ease;
+}
+
+.mouth.yawn {
+    width: 20px;
+    height: 10px;
+    border-bottom: 3px solid #333;
+    border-radius: 0 0 70% 70%;
+}
+
+.horn {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #b78e5a;
+    position: absolute;
+    top: 2px;
+}
+
+.horn.left {
+    left: -6px;
+}
+
+.horn.right {
+    right: -6px;
+}
+
+.hands {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 36px;
+    height: 6px;
+    background: #fbe7d2;
+    border-radius: 0 0 12px 12px;
+    transform: translateX(-50%);
+    border: 1px solid #ccc;
+    z-index: 1;
+}
+
+.sheep-wrapper {
+    position: absolute;
+    cursor: grab;
+    z-index: 1000;
+}
+
+
+/* bảng */
+.text-truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Hiệu ứng Hover cho Card */
+.card-hover {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    /* Sử dụng bóng lớn hơn một chút từ Bootstrap hoặc tùy chỉnh */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Tùy chỉnh Dropdown Toggle - Ẩn mũi tên mặc định */
+.dropdown-toggle-no-caret::after {
+    display: none;
+}
+
+/* Tăng vùng click cho icon dropdown và thêm hiệu ứng nhẹ */
+.dropdown-toggle-no-caret {
+    padding: 0.25rem 0.5rem;
+    /* Thêm padding để dễ click hơn */
+    margin: -0.25rem -0.5rem;
+    /* Bù lại padding để không ảnh hưởng layout */
+    border-radius: 0.25rem;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.dropdown-toggle-no-caret:hover,
+.dropdown-toggle-no-caret:focus {
+    background-color: rgba(0, 0, 0, 0.05);
+    /* Màu nền nhẹ khi hover/focus */
+    text-decoration: none;
+    /* Bỏ gạch chân nếu có */
+}
+
+/* Căn chỉnh và thêm icon cho dropdown items */
+.dropdown-item .fa-fw {
+    /* Giữ icon căn lề đẹp mắt */
+    text-align: center;
+}
+
+/* Cải thiện giao diện dropdown item xóa */
+.dropdown-item.text-danger:hover,
+.dropdown-item.text-danger:focus {
+    background-color: #f8d7da;
+    /* Màu nền đỏ nhạt khi hover */
+    color: #721c24;
+    /* Màu chữ đỏ đậm hơn */
+}
+
+/* Đảm bảo text-truncate hoạt động tốt trong flex */
+.text-truncate {
+    min-width: 0;
+    /* Cần thiết cho text-truncate trong flex item */
+}
+
+/* Có thể tăng nhẹ font chữ cho toàn bộ card nếu muốn */
+/* body {
+    font-size: 0.95rem;
+} */
+
+
+/* overlay card*/
+#cardOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay-content {
+    background-color: #fff;
+    color: #000;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.overlay-content p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.overlay-close-btn {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.overlay-close-btn:hover {
+    background-color: #333;
+}

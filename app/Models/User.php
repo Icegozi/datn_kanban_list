@@ -77,6 +77,11 @@ class User extends Authenticatable
         return $this->hasMany(TaskHistory::class);
     }
 
+    public function boards()
+    {
+        return $this->hasMany(Board::class);
+    }
+
     public static function register(array $data)
     {
         return self::create([
@@ -88,21 +93,6 @@ class User extends Authenticatable
         ]);
     }
 
-    // public static function login(array $credentials): bool
-    // {
-    //     $user = self::where('email', $credentials['email'])->first();
-
-    //     if (!$user || $user->status !== 'active') {
-    //         return false;
-    //     }
-
-    //     if (Auth::attempt($credentials)) {
-    //         session()->regenerate();
-    //         return true;
-    //     }
-
-    //     return false;
-    // }
 
     public static function login(array $credentials, bool $remember = false): bool
     {
