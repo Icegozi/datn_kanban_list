@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Board extends Model
 {
@@ -15,6 +16,12 @@ class Board extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function columns(): HasMany
+    {
+        // Mặc định sắp xếp các cột theo vị trí 'position'
+        return $this->hasMany(Column::class)->orderBy('position', 'asc');
     }
 
     // Lấy tất cả board theo user_id

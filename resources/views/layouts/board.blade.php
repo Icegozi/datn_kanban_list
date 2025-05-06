@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Kanban App')</title>
 
     <!-- Fonts and Icons -->
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/OverlayScrollbars.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/user.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/column.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
     <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css')}}">
 
@@ -26,27 +26,11 @@
     <div class="wrapper d-flex flex-column min-vh-100">
 
         {{-- Topbar --}}
-        @include('components.topbar') {{-- Sẽ tạo ở dưới --}}
+        @include('components.topbar')
 
         <div class="d-flex flex-grow-1">
-            @include('components.sidebar')
             {{-- Content --}}
-            <div class="content-wrapper flex-grow-1 p-3">
-                <div class="sheep-wrapper" id="draggable-sheep">
-                    <div class="sheep">
-                        <div class="wool"></div>
-                        <div class="face">
-                            <div class="eye left"></div>
-                            <div class="eye right"></div>
-                            <div class="cheek left"></div>
-                            <div class="cheek right"></div>
-                            <div class="mouth"></div>
-                            <div class="horn left"></div>
-                            <div class="horn right"></div>
-                        </div>
-                        <div class="hands"></div>
-                    </div>
-                </div>
+            <div class="content-wrapper flex-grow-1 p-3" style="overflow-x: auto; overflow-y: hidden; white-space: nowrap">
                 <div class="cute-border w-100 h-100">
                     @yield('content')
                 </div>
@@ -59,19 +43,39 @@
     </div>
 
     {{-- Scripts --}}
+    {{-- Scripts --}}
     <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('plugins/jquery/jquery-ui.min.js')}}"></script> {{-- Make sure jQuery UI is loaded BEFORE
+    column.js --}}
     <script src="{{ asset('plugins/overlayscrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <script src="{{ asset('assets/js/adminlte.js') }}"></script>
     <script>
+        // Add CSRF token for AJAX
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         window.routeUrls = {
-            boardsStore: @json(route('boards.store')),
-            boardsUpdateBase: @json(route('boards.update', ['board' => ':boardIdPlaceholder'])),
-            boardsDestroyBase: @json(route('boards.destroy', ['board' => ':boardIdPlaceholder']))
+            // Column URLs (add these)
+            columnsStoreBase: @json(route('columns.store', ['board' => ':boardIdPlaceholder'])),
+            columnsUpdateBase: @json(route('columns.update', ['board' => ':boardIdPlaceholder', 'column' => ':columnIdPlaceholder'])),
+            columnsDestroyBase: @json(route('columns.destroy', ['board' => ':boardIdPlaceholder', 'column' => ':columnIdPlaceholder'])),
+            columnsReorderBase: @json(route('columns.reorder', ['board' => ':boardIdPlaceholder']))
+
+             // --- Task URLs ---
+            tasksStoreBase: @json(route('tasks.store', ['column' => ':columnIdPlaceholder'])),
+            tasksShowBase: @json(route('tasks.show', ['task' => ':taskIdPlaceholder'])),
+            tasksUpdateBase: @json(route('tasks.update', ['task' => ':taskIdPlaceholder'])),
+            tasksDestroyBase: @json(route('tasks.destroy', ['task' => ':taskIdPlaceholder'])),
+            tasksUpdatePosition: @json(route('tasks.updatePosition')) 
         };
+        // Pass the current board ID to JS if we are on a board page
+        window.currentBoardId = @json($board->id ?? null);
     </script>
-    <script src="{{ asset('assets/js/user.js')}}"></script>
-    <script src="{{ asset('plugins/jquery/jquery-ui.min.js')}}"></script>
+    <script src="{{ asset('assets/js/column.js')}}"></script>
 
 </body>
 

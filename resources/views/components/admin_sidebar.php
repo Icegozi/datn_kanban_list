@@ -7,12 +7,12 @@
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
             <a href="#" class="nav-link active" aria-current="page">
-                Board của tôi
+                Thống kê
             </a>
         </li>
         <li>
             <a href="#" class="nav-link text-dark">
-                Phân quyền board
+                Quản lý tài khoản
             </a>
         </li>
     </ul>

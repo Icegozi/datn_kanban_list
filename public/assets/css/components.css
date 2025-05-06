@@ -1,0 +1,123 @@
+/* Sidebar */
+.nav-link {
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.nav-link.active {
+    background-color: #0b0b0b !important;
+    color: white;
+}
+
+a.navbar-brand,
+a.navbar-brand:hover,
+a.navbar-brand:focus {
+    display: inline-block;
+    color: #1b1e20;
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.navbar-brand span {
+    display: inline-block;
+    color: #ff545a;
+    text-transform: capitalize;
+}
+
+/* Topbar */
+.main-header {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0 !important;
+}
+
+.main-header.navbar {
+    background-color: #0f0b0b;
+    color: #ffffff;
+
+
+}
+
+.main-header.navbar .nav-link,
+.main-header.navbar .navbar-brand,
+.main-header.navbar .nav-item a {
+    color: #ffffff !important;
+}
+
+.main-header.navbar .nav-link:hover,
+.main-header.navbar .navbar-brand:hover,
+.main-header.navbar .nav-item a:hover {
+    color: #ff545a !important;
+    cursor: pointer;
+}
+
+.main-header.navbar .navbar-brand span {
+    color: #ff545a;
+}
+
+/*-------------------------------------
+        12. Footer
+--------------------------------------*/
+/* Footer chỉnh sửa */
+.footer {
+    background-color: #0f0b0b;
+    /* nền sáng */
+    padding: 30px 0 10px 0;
+    border-top: 1px solid #e1e5eb;
+    /* viền trên nhẹ */
+    color: #6c757d;
+    /* màu chữ trung tính */
+    font-size: 14px;
+
+}
+
+.hm-footer-copyright p,
+.hm-footer-copyright p a {
+    margin: 0;
+    color: #6c757d;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+.footer-social {
+    text-align: right;
+}
+
+.footer-social a,
+.footer-social span {
+    display: inline-block;
+    color: #6c757d;
+    font-size: 14px;
+    margin-left: 15px;
+    transition: all 0.3s ease;
+}
+
+.footer-social a {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    background: #dee2e6;
+    /* nền xám sáng hơn */
+    text-align: center;
+    border-radius: 50%;
+}
+
+.footer-social a:hover {
+    background: #ff545a;
+    /* hover nền đỏ */
+    color: #fff;
+    /* hover chữ trắng */
+}
+
+.footer-social span:hover {
+    color: #ff545a;
+    /* hover đổi màu email */
+}
+
+.footer .container {
+    max-width: 1140px;
+}

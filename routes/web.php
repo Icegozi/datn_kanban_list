@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\User\ColumnController;
+use App\Http\Controllers\User\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -37,11 +39,30 @@ Route::middleware(['auth'])->group(function () {
             : redirect()->route('user.dashboard');
     })->name('dashboard');
 
-    // Board (dành cho cả user và admin)
-    Route::resource('boards', BoardController::class);
-
     // Dashboard riêng cho user thường
     Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    // Route::resource('boards', BoardController::class)->except([
+    //     'index', 'create', 'edit' 
+    // ])->middleware('auth');
+    Route::resource('boards', BoardController::class)->except([
+        'index', 'create', 'edit'
+    ]);
+
+    Route::post('/boards', [BoardController::class, 'store'])->name('boards.store');
+
+    // Column Routes (Nested under boards)
+    Route::post('/boards/{board}/columns', [ColumnController::class, 'store'])->name('columns.store');
+    Route::put('/boards/{board}/columns/{column}', [ColumnController::class, 'update'])->name('columns.update');
+    Route::delete('/boards/{board}/columns/{column}', [ColumnController::class, 'destroy'])->name('columns.destroy');
+    Route::post('/boards/{board}/columns/reorder', [ColumnController::class, 'reorder'])->name('columns.reorder');
+
+
+    // --- Task Routes ---
+    Route::post('/columns/{column}/tasks', [TaskController::class, 'store'])->name('tasks.store');
+    Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::post('/tasks/update-position', [TaskController::class, 'updatePosition'])->name('tasks.updatePosition');
 
     // ==== ROUTE ĐẶC BIỆT CHO ADMIN ====
     Route::middleware('is_admin')->group(function () {
