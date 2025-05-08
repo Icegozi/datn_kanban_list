@@ -61,13 +61,14 @@
     {{-- Scripts --}}
     <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('plugins/overlayscrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+   
     <script src="{{ asset('assets/js/adminlte.js') }}"></script>
     <script>
         window.routeUrls = {
             boardsStore: @json(route('boards.store')),
             boardsUpdateBase: @json(route('boards.update', ['board' => ':boardIdPlaceholder'])),
-            boardsDestroyBase: @json(route('boards.destroy', ['board' => ':boardIdPlaceholder']))
+            boardsDestroyBase: @json(route('boards.destroy', ['board' => ':boardIdPlaceholder'])),
+            tasksShowPageBase: @json(route('tasks.showDetailsPage', ['task' => ':taskIdPlaceholder'])) 
         };
     </script>
     <script src="{{ asset('assets/js/user.js')}}"></script>

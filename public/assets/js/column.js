@@ -12,7 +12,7 @@ $(function () {
         let url = window.routeUrls[routeName] || '';
         for (const key in params) {
             url = url.replace(`:${key}Placeholder`, params[key]);
-            url = url.replace(`:${key}`, params[key]); 
+            url = url.replace(`:${key}`, params[key]);
         }
 
         if (url.includes(':boardId') && !params['boardId'] && window.currentBoardId) {
@@ -23,6 +23,7 @@ $(function () {
         }
 
         if (url.includes(':columnId') && !params['columnId']) console.warn("Column ID missing for route", routeName);
+        console.log(url);
 
         return url;
     }
@@ -41,26 +42,26 @@ $(function () {
             },
             stop: function (event, ui) {
                 ui.item.removeClass('dragging');
-    
+
                 // --- Giữ thẻ "Thêm công việc" ở cuối ---
                 const column = ui.item.closest('.column-content');
                 const addCard = column.find('.add-card-placeholder');
                 column.append(addCard); // đảm bảo luôn nằm cuối
-    
+
                 // --- Gửi dữ liệu mới về server ---
                 let taskId = ui.item.data('task-id');
                 let newColumnId = ui.item.closest('.kanban-column').data('column-id');
                 let taskOrder = ui.item.parent().children('.kanban-card').not('.add-card-placeholder').map(function () {
                     return $(this).data('task-id');
                 }).get();
-    
+
                 console.log(`Task ${taskId} moved to Column ${newColumnId}. New order:`, taskOrder);
-    
+
                 // $.ajax({ url: '...', method: 'POST', data: { taskId, newColumnId, order: taskOrder } });
             }
         }).disableSelection();
     }
-    
+
 
     function initializeColumnSortable() {
         $("#kanbanBoard").sortable({
@@ -72,7 +73,7 @@ $(function () {
             placeholder: "kanban-column column-placeholder", // Cần định nghĩa style cho class này trong CSS
             forcePlaceholderSize: true,
             tolerance: "pointer",
-            start: function(event, ui) {
+            start: function (event, ui) {
                 // Đảm bảo placeholder có kích thước giống cột thật
                 ui.placeholder.height(ui.item.outerHeight());
                 ui.placeholder.width(ui.item.outerWidth());
@@ -109,7 +110,7 @@ $(function () {
             url: url,
             method: 'POST', // Phương thức POST như đã định nghĩa trong route
             data: {
-                order: orderedColumnIds, 
+                order: orderedColumnIds,
             },
             success: function (response) {
                 if (response.success) {
@@ -148,8 +149,9 @@ $(function () {
         }
 
         const url = getRoute('columnsStoreBase', { boardId: boardId });
+
         const $button = $(this);
-        $button.prop('disabled', true).text('Đang xử lý...'); 
+        $button.prop('disabled', true).text('Đang xử lý...');
 
         $.ajax({
             url: url,
@@ -179,9 +181,9 @@ $(function () {
                     </div>`;
                     // Insert before the 'Add Column' trigger
                     $('.add-column-trigger').before(newColumnHtml);
-                    $('#cancelNewColumnBtn').click(); 
-                    initializeCardSortable(); 
-                    $("#kanbanBoard").sortable("refresh"); 
+                    $('#cancelNewColumnBtn').click();
+                    initializeCardSortable();
+                    $("#kanbanBoard").sortable("refresh");
                 } else {
                     showNotification(response.message || 'Failed to create column.', 'error');
                 }
@@ -203,7 +205,7 @@ $(function () {
 
     // Allow Enter key to save new column
     $('#newColumnName').on('keypress', function (e) {
-        if (e.which == 13) { 
+        if (e.which == 13) {
             e.preventDefault();
             $('#saveNewColumnBtn').click();
         }
@@ -228,10 +230,10 @@ $(function () {
     });
 
     $('#kanbanBoard').on('blur keypress', '.column-title-input', function (e) {
-        if (e.type === 'keypress' && e.which !== 13) { 
+        if (e.type === 'keypress' && e.which !== 13) {
             return;
         }
-        e.preventDefault(); // Prevent form submission on Enter
+        e.preventDefault();
 
         const $input = $(this);
         const newName = $input.val().trim();
@@ -255,26 +257,26 @@ $(function () {
             data: { name: newName },
             success: function (response) {
                 if (response.success) {
-                    $title.text(response.new_name); 
+                    $title.text(response.new_name);
                     showNotification(response.message);
                 } else {
                     showNotification(response.message || 'Failed to update name.', 'error');
-                    $title.text(originalName); 
+                    $title.text(originalName);
                 }
             },
             error: function (jqXHR) {
                 let errorMsg = 'Error updating column name.';
                 if (jqXHR.responseJSON && jqXHR.responseJSON.errors && jqXHR.responseJSON.errors.name) {
-                    errorMsg = jqXHR.responseJSON.errors.name[0]; 
+                    errorMsg = jqXHR.responseJSON.errors.name[0];
                 } else if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
                     errorMsg = jqXHR.responseJSON.message;
                 }
                 showNotification(errorMsg, 'error');
-                $title.text(originalName); 
+                $title.text(originalName);
             },
             complete: function () {
-                $input.remove(); 
-                $title.show();   
+                $input.remove();
+                $title.show();
             }
         });
     });
@@ -319,26 +321,7 @@ $(function () {
         });
     });
 
-    // --- Card Adding (Basic Placeholder - Expand Later) ---
-    $('#kanbanBoard').on('click', '.add-card-placeholder', function () {
-        const $placeholder = $(this);
-        const $columnContent = $placeholder.closest('.column-content');
-        const columnId = $columnContent.data('column-id');
-
-        // Simple input for now
-        const newCardInputHtml = `
-        <div class="kanban-card new-card-entry">
-          <textarea class="form-control card-input" rows="2" placeholder="Enter card title..."></textarea>
-          <div class="mt-1">
-             <button class="btn btn-success btn-sm save-card-btn">Save</button>
-             <button class="btn btn-secondary btn-sm cancel-card-btn">Cancel</button>
-          </div>
-        </div>
-        `;
-        $(newCardInputHtml).insertBefore($placeholder);
-        $placeholder.hide();
-        $columnContent.find('.card-input').last().focus();
-    });
+    
 
     // Cancel adding card
     $('#kanbanBoard').on('click', '.cancel-card-btn', function () {
@@ -379,6 +362,7 @@ $(function () {
             $(this).closest('.new-card-entry').find('.save-card-btn').click();
         }
     });
+
 
     // --- Initializations ---
     initializeCardSortable();

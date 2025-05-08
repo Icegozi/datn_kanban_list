@@ -69,14 +69,3 @@
 
 </div> {{-- End .kanban-board --}}
 @endsection
-
-@push('scripts')
-{{-- Include column-specific JS if you create a separate file --}}
-{{-- <script src="{{ asset('assets/js/board_show.js') }}"></script> --}}
-
- {{-- Inline JS or include a dedicated file for board interactions --}}
- <script>
-    // Put the column.js logic here or ensure it runs after the DOM is ready
-    // $(function() { ... your column.js code ... });
- </script>
-@endpush

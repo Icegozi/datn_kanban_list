@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::post('/tasks/update-position', [TaskController::class, 'updatePosition'])->name('tasks.updatePosition');
+    Route::get('/tasks/{task}/details', [TaskController::class, 'showDetailsPage'])->name('tasks.showDetailsPage');
 
     // ==== ROUTE ĐẶC BIỆT CHO ADMIN ====
     Route::middleware('is_admin')->group(function () {

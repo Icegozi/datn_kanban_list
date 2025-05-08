@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/adminlte.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/column.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css')}}">
+    <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css') }}">
 
 </head>
 
@@ -30,7 +30,8 @@
 
         <div class="d-flex flex-grow-1">
             {{-- Content --}}
-            <div class="content-wrapper flex-grow-1 p-3" style="overflow-x: auto; overflow-y: hidden; white-space: nowrap">
+            <div class="content-wrapper flex-grow-1 p-3"
+                style="overflow-x: auto; overflow-y: hidden; white-space: nowrap">
                 <div class="cute-border w-100 h-100">
                     @yield('content')
                 </div>
@@ -46,9 +47,8 @@
     {{-- Scripts --}}
     <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/jquery-ui.min.js')}}"></script> {{-- Make sure jQuery UI is loaded BEFORE
+    <script src="{{ asset('plugins/jquery/jquery-ui.min.js') }}"></script> {{-- Make sure jQuery UI is loaded BEFORE
     column.js --}}
-    <script src="{{ asset('plugins/overlayscrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <script src="{{ asset('assets/js/adminlte.js') }}"></script>
     <script>
         // Add CSRF token for AJAX
@@ -63,20 +63,25 @@
             columnsStoreBase: @json(route('columns.store', ['board' => ':boardIdPlaceholder'])),
             columnsUpdateBase: @json(route('columns.update', ['board' => ':boardIdPlaceholder', 'column' => ':columnIdPlaceholder'])),
             columnsDestroyBase: @json(route('columns.destroy', ['board' => ':boardIdPlaceholder', 'column' => ':columnIdPlaceholder'])),
-            columnsReorderBase: @json(route('columns.reorder', ['board' => ':boardIdPlaceholder']))
+            columnsReorderBase: @json(route('columns.reorder', ['board' => ':boardIdPlaceholder'])),
 
-             // --- Task URLs ---
+            // --- Task URLs ---
             tasksStoreBase: @json(route('tasks.store', ['column' => ':columnIdPlaceholder'])),
             tasksShowBase: @json(route('tasks.show', ['task' => ':taskIdPlaceholder'])),
             tasksUpdateBase: @json(route('tasks.update', ['task' => ':taskIdPlaceholder'])),
             tasksDestroyBase: @json(route('tasks.destroy', ['task' => ':taskIdPlaceholder'])),
-            tasksUpdatePosition: @json(route('tasks.updatePosition')) 
+            tasksUpdatePosition: @json(route('tasks.updatePosition'))
+            tasksShowPageBase: @json(route('tasks.showDetailsPage', ['task' => ':taskIdPlaceholder']))
         };
         // Pass the current board ID to JS if we are on a board page
         window.currentBoardId = @json($board->id ?? null);
     </script>
-    <script src="{{ asset('assets/js/column.js')}}"></script>
+    <script src="{{ asset('assets/js/column.js') }}"></script>
+    <script src="{{ asset('assets/js/task.js') }}"></script>
+    
+   
 
+    
 </body>
 
 </html>
