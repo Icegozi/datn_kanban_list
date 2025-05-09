@@ -119,17 +119,13 @@ body {
 
   .add-column-placeholder:hover {
     background-color: #f0f8ff;
-    /* Màu nền nhạt khi hover */
     border-color: #4a4e4a;
-    /* Màu viền thay đổi khi hover */
   }
 
   .add-column-placeholder i {
     margin-right: 8px;
     font-size:medium;
   }
-
-
 
   .kanban-card {
     background: #fff;
@@ -160,40 +156,34 @@ body {
     box-shadow: 0 0 0 2px #4c9aff;
   }
 
-  /* ... (keep existing styles) ... */
-
 .kanban-board {
-    /* Ensure enough height or manage scrolling */
-    min-height: calc(100vh - 250px); /* Adjust based on header/footer */
-    align-items: stretch; /* Make columns stretch vertically */
+    min-height: calc(100vh - 250px); 
+    align-items: stretch; 
   }
   
   .kanban-column {
-    /* ... existing ... */
-     height: auto; /* Allow columns to grow */
-     min-height: 200px; /* Minimum height */
-     display: flex;       /* Use flexbox for vertical layout */
-     flex-direction: column; /* Stack header, content, add-card vertically */
-     position: relative; /* For absolute positioning of temp inputs */
+     height: auto; 
+     min-height: 200px; 
+     display: flex;     
+     flex-direction: column; 
+     position: relative; 
   }
   
    .column-header {
-      /* Styles for the header containing title and actions */
-      cursor: grab; /* Indicate draggable */
+      cursor: grab; 
    }
    .kanban-board.ui-sortable-helper .column-header {
-       cursor: grabbing; /* Cursor while dragging column */
+       cursor: grabbing;
    }
   
   
   .column-title {
-    /* ... existing ... */
-    cursor: pointer; /* Indicate it's clickable/editable */
+    cursor: pointer; 
     transition: background-color 0.2s ease;
-    flex-grow: 1; /* Allow title to take available space */
-    margin-bottom: 0 !important; /* Override bootstrap margin if needed */
-    text-align: left; /* Adjust alignment if needed */
-    padding: 5px 8px; /* Adjust padding */
+    flex-grow: 1; 
+    margin-bottom: 0 !important; 
+    text-align: left; 
+    padding: 5px 8px;
     border-radius: 3px;
   }
   
@@ -202,60 +192,54 @@ body {
       color: gray;
   }
   
-  /* Style for when title is being edited */
   .column-title-input {
       width: 100%;
       border: 1px solid #ced4da;
       padding: 5px 8px;
       border-radius: 3px;
-      font-size: inherit; /* Match h5 size */
-      font-weight: bold; /* Match h5 weight */
-      box-shadow: 0 0 0 2px #4c9aff; /* Focus indicator */
+      font-size: inherit; 
+      font-weight: bold; 
+      box-shadow: 0 0 0 2px #4c9aff; 
   }
   
   .column-actions .btn {
-      padding: 0.1rem 0.4rem; /* Smaller buttons */
+      padding: 0.1rem 0.4rem; 
       font-size: 0.8em;
       line-height: 1.2;
       margin-left: 4px;
   }
   
   .column-content {
-       overflow-y: auto; /* Allow scrolling for tasks */
+       overflow-y: auto;
        overflow-x: hidden;
-       flex-grow: 1;      /* Allow content to take remaining vertical space */
-       min-height: 50px; /* Prevent collapsing */
-       padding-bottom: 5px; /* Space below last card */
-       /* Add some top padding if needed */
+       flex-grow: 1;      
+       min-height: 425px; 
+       padding-bottom: 5px; 
        padding-top: 5px;
   }
   
   
-  /* Style for the Add Column trigger/form */
   .add-column-trigger {
-      align-self: flex-start; /* Align with top of other columns */
+      align-self: flex-start; 
   }
   
   .add-column-placeholder {
-      /* ... existing ... */
-      height: auto; /* Adjust if needed */
-      min-height: 60px; /* Ensure it's clickable */
+      height: auto; 
+      min-height: 60px; 
   }
   
   
-  /* jQuery UI Sortable Placeholders */
   .kanban-column.column-placeholder {
       background-color: #e9ecef;
       border: 2px dashed #adb5bd;
       opacity: 0.7;
-      /* Ensure it takes up the same space */
       flex: 0 0 300px;
       margin-right: 20px;
       border-radius: 10px;
       box-shadow: none;
   }
   
-  .kanban-card.kanban-placeholder { /* Existing card placeholder */
+  .kanban-card.kanban-placeholder { 
     background: #d1d1d1;
     border-radius: 8px;
     height: 80px;
@@ -263,13 +247,13 @@ body {
     opacity: 0.6;
   }
   
-  .kanban-card.dragging { /* Existing card dragging */
+  .kanban-card.dragging { 
     cursor: move;
     opacity: 0.8;
     transform: rotate(3deg);
   }
   
-   /* Make column content area the drop target for cards */
+
   .column-content.ui-sortable-hover {
-      background-color: #f0f8ff; /* Highlight drop zone */
+      background-color: #f0f8ff; 
   }

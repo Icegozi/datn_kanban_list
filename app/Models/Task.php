@@ -83,15 +83,15 @@ class Task extends Model
     }
 
     public function loadDetails(): self
-    {
-        return $this->load([
-            'column',
-            'assignees',
-            'attachments',
-            'comments.user',
-            'taskHistories.user',
-        ]);
-    }
+{
+    return $this->load([
+        'column', 
+        'assignees',
+        'attachments',
+        'comments.user',     
+        'taskHistories.user', 
+    ]);
+}
 
     public function updateDetails(array $data): bool
     {

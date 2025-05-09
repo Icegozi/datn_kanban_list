@@ -70,15 +70,17 @@
             tasksShowBase: @json(route('tasks.show', ['task' => ':taskIdPlaceholder'])),
             tasksUpdateBase: @json(route('tasks.update', ['task' => ':taskIdPlaceholder'])),
             tasksDestroyBase: @json(route('tasks.destroy', ['task' => ':taskIdPlaceholder'])),
-            tasksUpdatePosition: @json(route('tasks.updatePosition'))
+            tasksUpdatePosition: @json(route('tasks.updatePosition')),
             tasksShowPageBase: @json(route('tasks.showDetailsPage', ['task' => ':taskIdPlaceholder']))
         };
         // Pass the current board ID to JS if we are on a board page
-        window.currentBoardId = @json($board->id ?? null);
+        // Trong resources/views/layouts/board.blade.php
+        window.currentBoardId = @json(isset($board) ? $board->id : null);
     </script>
     <script src="{{ asset('assets/js/column.js') }}"></script>
     <script src="{{ asset('assets/js/task.js') }}"></script>
-    
+    {{-- Include modal HTML --}}
+    @include('user.partials.task_detail_modal') 
    
 
     

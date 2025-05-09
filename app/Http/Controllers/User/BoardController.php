@@ -57,17 +57,17 @@ class BoardController extends Controller
              abort(403, 'Unauthorized action.');
          }
      
-         // Eager load các mối quan hệ cần thiết cho board view
+
          $board->load([
              'columns' => function ($query) {
-                 $query->orderBy('position', 'asc'); // Sắp xếp cột theo vị trí
+                 $query->orderBy('position', 'asc'); 
              },
              // Load tasks cho mỗi column, sắp xếp theo vị trí và load luôn assignees của task
              'columns.tasks' => function ($query) {
                  $query->with('assignees') // Eager load assignees
                        ->orderBy('position', 'asc'); // Sắp xếp task trong cột
              },
-             // Không cần load columns.tasks.assignees riêng nữa vì đã có trong with('assignees')
+
          ]);
      
          return view('user.boards.show', compact('board'));

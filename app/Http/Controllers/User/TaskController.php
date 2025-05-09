@@ -16,75 +16,104 @@ class TaskController extends Controller
 {
     private function authorizeTaskAccess(Task $task)
     {
-        // Lấy board chứa task này
-        $board = $task->column->board; // Giả sử column relation đã được load hoặc sẽ được load
+        $board = $task->column->board;
         if ($board->user_id !== Auth::id()) {
             abort(403, 'Bạn không có quyền truy cập!');
         }
         return $board;
     }
 
-    /**
-     * Store a newly created task in storage.
-     */
     public function store(Request $request, Column $column)
     {
         $board = $column->board;
         if ($board->user_id !== Auth::id()) {
-            abort(403, 'Bạn không có quyền truy cập!');
+            return response()->json(['success' => false, 'message' => 'Bạn không có quyền truy cập bảng này!'], 403);
         }
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            // Các trường khác nếu cần
+            'description' => 'nullable|string',
+            'priority' => ['nullable', Rule::in(['low', 'normal', 'high', 'urgent'])],
+            'due_date' => 'nullable|date',
         ]);
 
         try {
-            $task = new Task();
-            // Thêm các trường khác bạn có thể gửi từ form
-            $dataToCreate = array_merge(
-                $request->validate(['title' => 'required|string|max:255']),
-                $request->only(['description', 'priority', 'due_date']) // Lấy thêm các trường nếu có
-            );
-            $task = $task->createForColumn($column, $dataToCreate);
+            $taskInstance = new Task(); 
+            $dataToCreate = [
+                'title' => $validated['title'],
+                'description' => $request->input('description'), 
+                'priority' => $request->input('priority', 'normal'), 
+                'due_date' => $request->input('due_date'), 
+            ];
 
-            // Load relations cần thiết để hiển thị trên card mới (ví dụ assignees)
-            // $task->load('assignees'); // Nếu bạn có assignees và muốn hiển thị ngay
+            $createdTask = $taskInstance->createForColumn($column, $dataToCreate);
 
-            Log::info("Task created successfully with ID: {$task->id}");
+            $createdTask->load('assignees');
+
+            Log::info("Task created successfully with ID: {$createdTask->id} for column {$column->id}");
 
             return response()->json([
                 'success' => true,
-                'message' => 'Task created successfully.',
-                'task' => [ // Trả về đầy đủ thông tin cần cho createTaskCardHtml
-                    'id' => $task->id,
-                    'title' => $task->title,
-                    'description' => $task->description,
-                    'priority' => $task->priority,
-                    'due_date' => $task->due_date ? $task->due_date->toDateString() : null, // Format nếu cần
-                    'formatted_due_date' => $task->due_date ? $task->due_date->format('M d') : null,
-                    'position' => $task->position,
-                    'column_id' => $task->column_id,
-                    // 'assignees' => $task->assignees->map(function($assignee) { // Nếu có assignees
-                    //     return ['id' => $assignee->id, 'name' => $assignee->name, 'email' => $assignee->email];
-                    // }),
+                'message' => 'Công việc đã được tạo thành công!',
+                'task' => [
+                    'id' => $createdTask->id,
+                    'title' => $createdTask->title,
+                    'description' => $createdTask->description,
+                    'priority' => $createdTask->priority,
+                    'due_date' => $createdTask->due_date ? $createdTask->due_date->toDateString() : null,
+                    'formatted_due_date' => $createdTask->due_date ? $createdTask->due_date->format('d M') : null, // Ví dụ: 25 Th04
+                    'position' => $createdTask->position,
+                    'column_id' => $createdTask->column_id,
+                    'assignees' => $createdTask->assignees->map(function ($assignee) {
+                        return ['id' => $assignee->id, 'name' => $assignee->name, 'email' => $assignee->email];
+                    }),
                 ]
             ], 201);
         } catch (\Exception $e) {
-            Log::error("Error creating task in column {$column->id}: " . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Không thể thêm  nhiệm vụ mới.'], 500);
+            Log::error("Error creating task in column {$column->id}: " . $e->getMessage() . " at " . $e->getFile() . ":" . $e->getLine());
+            return response()->json(['success' => false, 'message' => 'Không thể thêm nhiệm vụ mới. Vui lòng thử lại.'], 500);
         }
     }
 
 
-    /**
-     * Display the specified task (for modal).
-     */
-    public function show(Task $task)
+    public function show(Task $task) 
     {
-        $this->authorizeTaskAccess($task);
-
+        $this->authorizeTaskAccess($task); 
         $task->loadDetails();
+
+        if ($task->column) {
+            $task->column_name = $task->column->name;
+        } else {
+            $task->column_name = 'N/A'; 
+            Log::warning("Task ID {$task->id} is missing column relation when trying to show details.");
+        }
+
+        // Định dạng ngày nếu cần
+        $task->formatted_due_date = $task->due_date ? $task->due_date->format('d/m/Y') : null;
+
+        if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
+            $task->task_histories->transform(function ($history) {
+                $history->user_name = $history->user ? $history->user->name : 'Người dùng không xác định';
+                $history->user_avatar = $history->user ? ('https://i.pravatar.cc/40?u=' . urlencode($history->user->email)) : 'https://i.pravatar.cc/40?u=unknown';
+                $history->time_ago = $history->created_at ? $history->created_at->diffForHumans() : 'Không rõ thời gian';
+                return $history;
+            });
+        } else {
+            $task->task_histories = collect([]);
+            Log::warning("Task ID {$task->id}: task_histories was not a collection, possibly null or load issue.");
+        }
+
+        if ($task->comments instanceof \Illuminate\Database\Eloquent\Collection) {
+            $task->comments->transform(function ($comment) {
+                $comment->user_name = $comment->user ? $comment->user->name : 'Người dùng không xác định';
+                $comment->user_avatar = $comment->user ? ('https://i.pravatar.cc/40?u=' . urlencode($comment->user->email)) : 'https://i.pravatar.cc/40?u=unknown';
+                $comment->time_ago = $comment->created_at ? $comment->created_at->diffForHumans() : 'Không rõ thời gian';
+                return $comment;
+            });
+        } else {
+            $task->comments = collect([]);
+            Log::warning("Task ID {$task->id}: comments was not a collection, possibly null or load issue.");
+        }
 
         return response()->json([
             'success' => true,
@@ -188,22 +217,46 @@ class TaskController extends Controller
         }
     }
 
+
     public function showDetailsPage(Task $task)
     {
-        // Sử dụng Route Model Binding, Laravel sẽ tự động tìm Task theo ID
-        // Load các relationship cần thiết
-        $task->load(['column.board', 'assignees', 'creator']); // Giả sử có 'creator' relationship
+        $this->authorizeTaskAccess($task);
 
-        // Định dạng ngày tháng nếu cần (hoặc dùng Accessor trong Model)
+        $task->load([
+            'column.board',
+            'assignees',
+            'comments.user',      
+            'taskHistories.user', 
+        ]);
+
+        $boardForLayout = $task->column->board;
+
         if ($task->due_date) {
-            $task->formatted_due_date = Carbon::parse($task->due_date)->format('d M, Y');
+            $task->formatted_due_date = $task->due_date->format('d M, Y');
         }
         if ($task->created_at) {
             $task->formatted_created_at = $task->created_at->format('d M, Y \lúc H:i');
         }
 
+        if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
+            $task->task_histories->each(function ($history) { 
+                $history->user_name = $history->user ? $history->user->name : 'N/A';
+                $history->time_ago = $history->created_at ? $history->created_at->diffForHumans() : 'N/A';
+            });
+        } else {
+            $task->task_histories = collect([]);
+        }
 
-        // Truyền dữ liệu task vào view mới
-        return view('tasks.show_details', compact('task'));
+        if ($task->comments instanceof \Illuminate\Database\Eloquent\Collection) {
+            $task->comments->each(function ($comment) {
+                $comment->user_name = $comment->user ? $comment->user->name : 'N/A';
+                $comment->time_ago = $comment->created_at ? $comment->created_at->diffForHumans() : 'N/A';
+            });
+        } else {
+            $task->comments = collect([]);
+        }
+
+        return view('user.tasks.show_details', ['task' => $task, 'board' => $boardForLayout]);
     }
 }
+
