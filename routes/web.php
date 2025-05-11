@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\User\AttachmentController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\BoardController;
 use App\Http\Controllers\User\CommentController;
@@ -46,7 +47,9 @@ Route::middleware(['auth'])->group(function () {
     //     'index', 'create', 'edit' 
     // ])->middleware('auth');
     Route::resource('boards', BoardController::class)->except([
-        'index', 'create', 'edit'
+        'index',
+        'create',
+        'edit'
     ]);
 
     Route::post('/boards', [BoardController::class, 'store'])->name('boards.store');
@@ -70,6 +73,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/tasks/{task}/comments', [CommentController::class, 'store'])->name('comments.store');
     // Route::put('/tasks/{task}/comments/{commentId}', [CommentController::class, 'update'])->name('comments.update');
     Route::delete('/tasks/{task}/comments/{commentId}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    // attackment
+
+    // Attachment routes
+    Route::get('/tasks/{task}/attachments', [AttachmentController::class, 'index'])->name('attachments.index'); 
+    Route::post('/tasks/{task}/attachments', [AttachmentController::class, 'store'])->name('attachments.store');
+    Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
 
     // ==== ROUTE ĐẶC BIỆT CHO ADMIN ====
     Route::middleware('is_admin')->group(function () {

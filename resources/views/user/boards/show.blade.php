@@ -31,9 +31,6 @@
                 @foreach($column->tasks as $task)
                     <div class="kanban-card" data-task-id="{{ $task->id }}">
                         <h5>{{ $task->title }}</h5>
-                        @if($task->description)
-                            <p class="small text-muted mb-1">{{ $task->description }}</p>
-                        @endif
                          @if($task->due_date)
                             <small class="task-due-date text-warning d-block mt-1">
                                 <i class="far fa-clock"></i>
