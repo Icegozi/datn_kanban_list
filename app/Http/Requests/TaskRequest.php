@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class BoardRequest extends FormRequest
+class TaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +23,10 @@ class BoardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('boards')->where(function ($query) {
-                    return $query->where('user_id', Auth::id());
-                }),
-            ],
-            'description' => 'nullable|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'priority' => ['nullable', Rule::in(['low', 'normal', 'high', 'urgent'])],
+            'due_date'    => 'nullable|date|after_or_equal:today',
         ];
     }
 }

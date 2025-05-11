@@ -26,4 +26,18 @@ class Column extends Model
         // You might want to order tasks within a column later
         return $this->hasMany(Task::class);
     }
+
+    public function createDefaultColumns(int $boardId): void
+    {
+        $defaultColumns = ['Việc cần làm', 'Đang làm', 'Hoàn thành'];
+
+        foreach ($defaultColumns as $index => $columnName) {
+            self::create([
+                'name' => $columnName,
+                'position' => $index,
+                'board_id' => $boardId,
+            ]);
+        }
+    }
+
 }

@@ -60,4 +60,13 @@ class Board extends Model
             Carbon::parse($to)->endOfDay()
         ])->get();
     }
+
+    //lấy column từ id
+    public static function getBoardData(int $id)
+    {
+        return self::with(['user', 'columns.tasks'])->findOrFail($id);
+    }
+
+
+
 }

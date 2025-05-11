@@ -139,7 +139,7 @@
                             <div class="description-box-edit" style="display: none;">
                                 <textarea id="taskDescriptionInput" class="form-control" rows="6" placeholder="Nhập mô tả cho công việc...">{{ e($task->description) }}</textarea>
                                 <div class="mt-2">
-                                    <button class="btn btn-success btn-sm" id="saveDescriptionBtn"><i class="fas fa-save mr-1"></i> Lưu</button>
+                                    <button class="btn btn-light btn-block text-left" id="archiveTaskBtn"><i class="fas fa-archive"></iLưu thay đổi> </button>
                                     <button class="btn btn-secondary btn-sm" id="cancelDescriptionBtn">Hủy</button>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@
                  <div class="card-header"><h3 class="card-title">HÀNH ĐỘNG</h3></div>
                 <div class="card-body btn-action-group">
                     <button class="btn btn-light btn-block text-left" id="moveTaskBtn"><i class="fas fa-arrow-right"></i> Di chuyển</button>
-                    <button class="btn btn-light btn-block text-left" id="archiveTaskBtn"><i class="fas fa-archive"></i> Lưu trữ</button>
+                    <button class="btn btn-light btn-block text-left" id="archiveTaskBtn"><i class="fas fa-archive"></i> Lưu thay đổi</button>
                     <button type="button" class="btn btn-danger btn-block text-left" id="deleteTaskBtn" data-task-id="{{ $task->id }}"><i class="fas fa-trash-alt"></i> Xóa công việc</button>
                 </div>
             </div>
@@ -273,39 +273,7 @@ $(function() {
         $('.description-box-display').html(originalDescription ? nl2br(escapeHtml(originalDescription)) : '<em class="text-muted">Thêm mô tả chi tiết hơn...</em>').show();
     });
 
-    $('#saveDescriptionBtn').on('click', function() {
-        const newDescription = $('#taskDescriptionInput').val();
-        const $button = $(this);
-        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Đang lưu...');
-
-        $.ajax({
-            url: window.routeUrls.tasksUpdateBase.replace(':taskIdPlaceholder', taskId),
-            method: 'PUT', // Hoặc PATCH
-            data: {
-                description: newDescription,
-                 _token: $('meta[name="csrf-token"]').attr('content') // Đảm bảo token được gửi
-            },
-            success: function(response) {
-                if (response.success && response.task) {
-                    $('.description-box-display').html(response.task.description ? nl2br(escapeHtml(response.task.description)) : '<em class="text-muted">Thêm mô tả chi tiết hơn...</em>');
-                    // originalDescription = response.task.description; // Cần cập nhật nếu muốn "Hủy" hoạt động đúng sau nhiều lần sửa
-                    $('#taskDescriptionInput').val(response.task.description); // Cập nhật textarea
-                    $('.description-box-edit').hide();
-                    $('.description-box-display').show();
-                    showGlobalNotification('Mô tả đã được cập nhật.', 'success');
-                } else {
-                    showGlobalNotification(response.message || 'Không thể cập nhật mô tả.', 'error');
-                }
-            },
-            error: function(jqXHR) {
-                showGlobalNotification('Lỗi: ' + (jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
-            },
-            complete: function() {
-                $button.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Lưu');
-            }
-        });
-    });
-
+    
     // Xóa Task
     $('#deleteTaskBtn').on('click', function() {
         if (!confirm('Bạn có chắc chắn muốn xóa công việc này không? Hành động này không thể hoàn tác.')) {

@@ -323,4 +323,12 @@ body {
  }
 
  /*rename board*/
- 
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;    /* Giới hạn 2 dòng */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

@@ -17,7 +17,6 @@
     @foreach($board->columns as $column)
         <div class="kanban-column" data-column-id="{{ $column->id }}">
             <div class="column-header d-flex justify-content-between align-items-center mb-3">
-                {{-- Make title editable later, add data attribute for easier selection --}}
                 <h5 class="column-title flex-grow-1 mr-2" data-column-id="{{ $column->id }}">{{ $column->name }}</h5>
                 {{-- Add dropdown/icons for column actions --}}
                 <div class="column-actions">
@@ -34,6 +33,12 @@
                         <h5>{{ $task->title }}</h5>
                         @if($task->description)
                             <p class="small text-muted mb-1">{{ $task->description }}</p>
+                        @endif
+                         @if($task->due_date)
+                            <small class="task-due-date text-warning d-block mt-1">
+                                <i class="far fa-clock"></i>
+                                {{ \Carbon\Carbon::parse($task->due_date)->format('d/m/Y') }}
+                            </small>
                         @endif
                          {{-- Add tags, avatars, due dates etc. based on your task model --}}
                          {{-- Example: --}}
@@ -60,7 +65,7 @@
 
         </div>
          {{-- Hidden Input Form for New Column --}}
-         <div class="add-column-form p-2 bg-light rounded" style="display: none;">
+         <div class="add-column-form p-2 bg-white rounded" style="display: none;">
              <input type="text" class="form-control form-control-sm mb-2" id="newColumnName" placeholder="Nhập tên cột...">
              <button class="btn btn-success btn-sm mr-1" id="saveNewColumnBtn">Lưu</button>
              <button class="btn btn-secondary btn-sm" id="cancelNewColumnBtn">Huỷ</button>

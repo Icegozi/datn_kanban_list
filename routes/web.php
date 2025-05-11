@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\BoardController;
+use App\Http\Controllers\User\CommentController;
 
 // Trang chủ
 Route::get('/', function () {
@@ -64,6 +65,11 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     Route::post('/tasks/update-position', [TaskController::class, 'updatePosition'])->name('tasks.updatePosition');
     Route::get('/tasks/{task}/details', [TaskController::class, 'showDetailsPage'])->name('tasks.showDetailsPage');
+
+    // comment
+    Route::post('/tasks/{task}/comments', [CommentController::class, 'store'])->name('comments.store');
+    // Route::put('/tasks/{task}/comments/{commentId}', [CommentController::class, 'update'])->name('comments.update');
+    Route::delete('/tasks/{task}/comments/{commentId}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
     // ==== ROUTE ĐẶC BIỆT CHO ADMIN ====
     Route::middleware('is_admin')->group(function () {

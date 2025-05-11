@@ -71,7 +71,11 @@
             tasksUpdateBase: @json(route('tasks.update', ['task' => ':taskIdPlaceholder'])),
             tasksDestroyBase: @json(route('tasks.destroy', ['task' => ':taskIdPlaceholder'])),
             tasksUpdatePosition: @json(route('tasks.updatePosition')),
-            tasksShowPageBase: @json(route('tasks.showDetailsPage', ['task' => ':taskIdPlaceholder']))
+            tasksShowPageBase: @json(route('tasks.showDetailsPage', ['task' => ':taskIdPlaceholder'])),
+
+            // Comment
+            commentsStoreBase: @json(route('comments.store', ['task' => ':taskIdPlaceholder'])),
+            commentsDeleteBase: "{{ url('/tasks/:taskIdPlaceholder/comments/:commentIdPlaceholder') }}"
         };
         // Pass the current board ID to JS if we are on a board page
         // Trong resources/views/layouts/board.blade.php
@@ -79,6 +83,10 @@
     </script>
     <script src="{{ asset('assets/js/column.js') }}"></script>
     <script src="{{ asset('assets/js/task.js') }}"></script>
+    <script src="{{ asset('plugins/jquery/dayjs.min.js')}}"></script>
+    <script src="{{ asset('assets/js/comment.js')}}"></script>
+    <script src="{{ asset('assets/js/due_date.js')}}"></script>
+
     {{-- Include modal HTML --}}
     @include('user.partials.task_detail_modal') 
    

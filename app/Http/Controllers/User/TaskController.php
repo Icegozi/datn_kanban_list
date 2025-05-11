@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TaskRequest;
+use App\Http\Requests\UpdateTaskPositionRequest;
 use App\Models\Column;
 use App\Models\Task;
+use App\Models\TaskHistory;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -23,35 +26,22 @@ class TaskController extends Controller
         return $board;
     }
 
-    public function store(Request $request, Column $column)
+    public function store(TaskRequest $request, Column $column)
     {
         $board = $column->board;
         if ($board->user_id !== Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Bạn không có quyền truy cập bảng này!'], 403);
         }
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'priority' => ['nullable', Rule::in(['low', 'normal', 'high', 'urgent'])],
-            'due_date' => 'nullable|date',
-        ]);
-
         try {
-            $taskInstance = new Task(); 
-            $dataToCreate = [
-                'title' => $validated['title'],
-                'description' => $request->input('description'), 
-                'priority' => $request->input('priority', 'normal'), 
-                'due_date' => $request->input('due_date'), 
-            ];
-
-            $createdTask = $taskInstance->createForColumn($column, $dataToCreate);
-
+            $taskInstance = new Task();
+            $taskHistory = new TaskHistory();
+            $data = $request->validated();
+            $data['priority'] = $request->input('priority', 'normal');
+            $createdTask = $taskInstance->createForColumn($column, $data);
+            $action = "tạo";
+            $taskHistory->logTaskHistory($createdTask, $action, $oldColumn->name ?? null, $newColumn->name ?? null);
             $createdTask->load('assignees');
-
-            Log::info("Task created successfully with ID: {$createdTask->id} for column {$column->id}");
-
             return response()->json([
                 'success' => true,
                 'message' => 'Công việc đã được tạo thành công!',
@@ -76,15 +66,15 @@ class TaskController extends Controller
     }
 
 
-    public function show(Task $task) 
+    public function show(Task $task)
     {
-        $this->authorizeTaskAccess($task); 
+        $this->authorizeTaskAccess($task);
         $task->loadDetails();
 
         if ($task->column) {
             $task->column_name = $task->column->name;
         } else {
-            $task->column_name = 'N/A'; 
+            $task->column_name = 'N/A';
             Log::warning("Task ID {$task->id} is missing column relation when trying to show details.");
         }
 
@@ -92,12 +82,23 @@ class TaskController extends Controller
         $task->formatted_due_date = $task->due_date ? $task->due_date->format('d/m/Y') : null;
 
         if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
-            $task->task_histories->transform(function ($history) {
-                $history->user_name = $history->user ? $history->user->name : 'Người dùng không xác định';
-                $history->user_avatar = $history->user ? ('https://i.pravatar.cc/40?u=' . urlencode($history->user->email)) : 'https://i.pravatar.cc/40?u=unknown';
-                $history->time_ago = $history->created_at ? $history->created_at->diffForHumans() : 'Không rõ thời gian';
-                return $history;
-            });
+           $task->task_histories->transform(function ($history) {
+            $user = $history->user;
+
+            $timestamp = $history->updated_at ?? $history->created_at;
+            $formatted_time = $timestamp ? \Carbon\Carbon::parse($timestamp)->format('Y/m/d H:i:s') : 'Không rõ thời gian';
+
+            return [
+                'id' => $history->id,
+                'user_id' => $user?->id,
+                'user_name' => $user?->name ?? 'Người dùng không xác định',
+                'user_avatar' => $user ? 'https://i.pravatar.cc/40?u=' . urlencode($user->email) : 'https://i.pravatar.cc/40?u=unknown',
+                'action' => $history->action,
+                'note' => $history->note,
+                'created_at' => $history->created_at->format('Y/m/d H:i:s'),
+                'updated_at' => $formatted_time,
+            ];
+        });
         } else {
             $task->task_histories = collect([]);
             Log::warning("Task ID {$task->id}: task_histories was not a collection, possibly null or load issue.");
@@ -125,19 +126,12 @@ class TaskController extends Controller
     /**
      * Update the specified task in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
         $this->authorizeTaskAccess($task);
 
-        $validated = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'priority' => ['sometimes', Rule::in(['low', 'normal', 'high', 'urgent'])],
-            'due_date' => 'nullable|date',
-        ]);
-
         try {
-            $task->updateDetails($validated);
+            $task->updateDetails($request->validated());
 
             return response()->json([
                 'success' => true,
@@ -186,18 +180,12 @@ class TaskController extends Controller
     /**
      * Update task position (within or between columns).
      */
-    public function updatePosition(Request $request)
+    public function updatePosition(UpdateTaskPositionRequest $request)
     {
-        $request->validate([
-            'task_id' => 'required|integer|exists:tasks,id',
-            'new_column_id' => 'required|integer|exists:columns,id',
-            'order' => 'required|array',
-            'order.*' => 'integer|exists:tasks,id',
-        ]);
-
         $task = Task::findOrFail($request->task_id);
         $board = $this->authorizeTaskAccess($task);
-
+        $taskHistory = new TaskHistory();
+        $oldColumn = Column::find($task->column_id);
         $newColumn = Column::findOrFail($request->new_column_id);
         if ($newColumn->board_id !== $board->id) {
             abort(403, 'Không thể di chuyển nhiệm vụ sang một cột trong bảng khác.');
@@ -206,57 +194,71 @@ class TaskController extends Controller
         try {
             DB::beginTransaction();
 
-            $task->moveToColumnWithOrder($request->new_column_id, $request->order, Auth::id());
+            // Cập nhật column_id (chỉ khi khác)
+            if ($task->column_id !== $request->new_column_id) {
+                $task->column_id = $request->new_column_id;
+                $task->save();
+            }
+            $action = "di chuyển";
+            $taskHistory->logTaskHistory($task, $action, $oldColumn->name ?? null, $newColumn->name ?? null);
+
+            foreach ($request->order as $index => $taskId) {
+                Task::where('id', $taskId)->update([
+                    'position' => $index, // hoặc $index + 1 tùy bạn
+                ]);
+            }
+
+            $action = "Di chuyển";
+            
 
             DB::commit();
-            return response()->json(['success' => true, 'message' => 'Vị trí nhiệm vụ đã thay đổi']);
+            return response()->json(['success' => true, 'message' => 'Vị trí nhiệm vụ đã cập nhật.']);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error("Error updating task position: " . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Không thể cập nhật vị trí nhiệm vụ'], 500);
+            Log::error("Lỗi khi cập nhật vị trí: " . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Không thể cập nhật vị trí nhiệm vụ.'], 500);
         }
     }
 
 
-    public function showDetailsPage(Task $task)
-    {
-        $this->authorizeTaskAccess($task);
+    //     public function showDetailsPage(Task $task)
+    //     {
+    //         $this->authorizeTaskAccess($task);
 
-        $task->load([
-            'column.board',
-            'assignees',
-            'comments.user',      
-            'taskHistories.user', 
-        ]);
+    //         $task->load([
+    //             'column.board',
+    //             'assignees',
+    //             'comments.user',
+    //             'taskHistories.user',
+    //         ]);
 
-        $boardForLayout = $task->column->board;
+    //         $boardForLayout = $task->column->board;
 
-        if ($task->due_date) {
-            $task->formatted_due_date = $task->due_date->format('d M, Y');
-        }
-        if ($task->created_at) {
-            $task->formatted_created_at = $task->created_at->format('d M, Y \lúc H:i');
-        }
+    //         if ($task->due_date) {
+    //             $task->formatted_due_date = $task->due_date->format('d M, Y');
+    //         }
+    //         if ($task->created_at) {
+    //             $task->formatted_created_at = $task->created_at->format('d M, Y \lúc H:i');
+    //         }
 
-        if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
-            $task->task_histories->each(function ($history) { 
-                $history->user_name = $history->user ? $history->user->name : 'N/A';
-                $history->time_ago = $history->created_at ? $history->created_at->diffForHumans() : 'N/A';
-            });
-        } else {
-            $task->task_histories = collect([]);
-        }
+    //         if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
+    //             $task->task_histories->each(function ($history) {
+    //                 $history->user_name = $history->user ? $history->user->name : 'N/A';
+    //                 $history->time_ago = $history->created_at ? $history->created_at->diffForHumans() : 'N/A';
+    //             });
+    //         } else {
+    //             $task->task_histories = collect([]);
+    //         }
 
-        if ($task->comments instanceof \Illuminate\Database\Eloquent\Collection) {
-            $task->comments->each(function ($comment) {
-                $comment->user_name = $comment->user ? $comment->user->name : 'N/A';
-                $comment->time_ago = $comment->created_at ? $comment->created_at->diffForHumans() : 'N/A';
-            });
-        } else {
-            $task->comments = collect([]);
-        }
+    //         if ($task->comments instanceof \Illuminate\Database\Eloquent\Collection) {
+    //             $task->comments->each(function ($comment) {
+    //                 $comment->user_name = $comment->user ? $comment->user->name : 'N/A';
+    //                 $comment->time_ago = $comment->created_at ? $comment->created_at->diffForHumans() : 'N/A';
+    //             });
+    //         } else {
+    //             $task->comments = collect([]);
+    //         }
 
-        return view('user.tasks.show_details', ['task' => $task, 'board' => $boardForLayout]);
-    }
+    //         return view('user.tasks.show_details', ['task' => $task, 'board' => $boardForLayout]);
+    //     }
 }
-

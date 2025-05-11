@@ -529,6 +529,7 @@ nav.navbar.bootsnav .navbar-toggle i {
     text-decoration: none;
     margin: 10px 0 5px;
     display: inline-block;
+    pointer-events: none;
 }
 
 .single-list-topics-content p {

@@ -32,7 +32,7 @@ $(function () {
     function initializeCardSortable() {
         $(".column-content").sortable({
             connectWith: ".column-content",
-            items: "> .kanban-card:not(.add-card-placeholder)", // loại trừ .add-card-placeholder
+            items: "> .kanban-card:not(.add-card-placeholder)", 
             placeholder: "kanban-placeholder",
             forcePlaceholderSize: true,
             tolerance: "pointer",
@@ -49,13 +49,13 @@ $(function () {
                 column.append(addCard); // đảm bảo luôn nằm cuối
 
                 // --- Gửi dữ liệu mới về server ---
-                let taskId = ui.item.data('task-id');
+                let taskId = ui.item.data(' task-id');
                 let newColumnId = ui.item.closest('.kanban-column').data('column-id');
                 let taskOrder = ui.item.parent().children('.kanban-card').not('.add-card-placeholder').map(function () {
                     return $(this).data('task-id');
                 }).get();
 
-                console.log(`Task ${taskId} moved to Column ${newColumnId}. New order:`, taskOrder);
+    
 
                 // $.ajax({ url: '...', method: 'POST', data: { taskId, newColumnId, order: taskOrder } });
             }
@@ -321,7 +321,7 @@ $(function () {
         });
     });
 
-    
+
 
     // Cancel adding card
     $('#kanbanBoard').on('click', '.cancel-card-btn', function () {
@@ -340,16 +340,48 @@ $(function () {
         const columnId = $columnContent.data('column-id');
 
         if (cardTitle) {
-            // --- TODO: AJAX Call to TaskController@store ---
-            console.log(`Save card "${cardTitle}" to column ${columnId}`);
-            // On success:
-            // 1. Replace the input area with the actual card HTML returned from server
-            // 2. Show the 'add card placeholder' again
-            // Example replacement (adapt with server response):
-            const savedCardHtml = `<div class="kanban-card" data-task-id="NEW_TASK_ID"><h5>${cardTitle}</h5></div>`;
-            $entry.replaceWith(savedCardHtml);
-            $columnContent.find('.add-card-placeholder').show();
-            initializeCardSortable(); // Refresh sortable
+            const url = getRoute('tasksStoreBase', { columnId: columnId });
+            if (url.startsWith('#ROUTE_')) {
+                showNotification('Lỗi cấu hình route tạo task.', 'error');
+                return;
+            }
+
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: {
+                    title: cardTitle,
+                    // Bạn có thể gửi thêm các trường khác nếu form nhập liệu có, ví dụ:
+                    // description: $entry.find('.card-description-input').val(),
+                    _token: $('meta[name="csrf-token"]').attr('content') // Quan trọng: gửi CSRF token
+                },
+                success: function (response) {
+                    console.log(response.task.id);
+                    
+                    if (response.success && response.task) {
+                        const savedCardHtml = `<div class="kanban-card" data-task-id="${response.task.id}"><h5>${cardTitle}</h5></div>`;
+                        $entry.replaceWith(savedCardHtml);
+                        $columnContent.find('.add-card-placeholder').show();
+                        initializeCardSortable(); 
+                        location.reload();
+                    } else {
+                        showNotification(response.message || 'Không thể tạo công việc.', 'error');
+                    }
+                },
+                error: function (jqXHR) {
+                    let errorMsg = 'Lỗi khi lưu công việc.';
+                    if (jqXHR.responseJSON) {
+                        if (jqXHR.responseJSON.errors && jqXHR.responseJSON.errors.title) {
+                            errorMsg = jqXHR.responseJSON.errors.title[0];
+                        } else if (jqXHR.responseJSON.message) {
+                            errorMsg = jqXHR.responseJSON.message;
+                        }
+                    } else {
+                        errorMsg = `Lỗi máy chủ: ${jqXHR.statusText} (${jqXHR.status})`;
+                    }
+                    showNotification(errorMsg, 'error');
+                },
+            });
         } else {
             showNotification('Card title cannot be empty.', 'warning');
             $input.focus();
