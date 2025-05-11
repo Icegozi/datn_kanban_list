@@ -1,10 +1,7 @@
-// D:\Đồ án tốt nghiệp\projects\datn_kanban_list\public\assets\js\task.js
-// Tạo một namespace để tránh xung đột và dễ gọi từ column.js
 var TaskJS = (function ($) {
     let isDragging = false;
-    let currentOpenTaskId = null; // ID của task đang mở trong modal
-    let originalTaskData = {}; // Dữ liệu gốc của task trong modal
-    // --- Helper Functions (Lấy từ column.js hoặc định nghĩa lại nếu cần) ---
+    let currentOpenTaskId = null; 
+    let originalTaskData = {}; 
     function showNotification(message, type = 'success') {
         alert(message);
         console.log(type.toUpperCase() + ": " + message);
@@ -85,7 +82,7 @@ var TaskJS = (function ($) {
         const $descTextarea = $('#modalTaskDescriptionTextarea');
 
         if (taskData.description) {
-            $descDisplay.html(taskData.description.replace(/\n/g, '<br>')); // Hiển thị xuống dòng
+            $descDisplay.html(taskData.description.replace(/\n/g, '<br>')); 
         } else {
             $descDisplay.html('<em class="text-muted">Thêm mô tả chi tiết hơn...</em>');
         }
@@ -170,6 +167,14 @@ var TaskJS = (function ($) {
             $activityLog.html('<p class="text-muted small">Chưa có hoạt động nào.</p>');
         }
 
+        // === Xử lý Đính kèm (Attachments) ===
+    if (typeof AttachmentManager !== 'undefined' && AttachmentManager.loadAttachments) {
+        // AttachmentManager.setCurrentTaskId(taskData.id); // Đã được gọi bên trong loadAttachments
+        AttachmentManager.loadAttachments(taskData.id);
+    } else {
+        $('#modalTaskAttachments').html('<p class="text-danger small">Lỗi: Mô-đun đính kèm chưa được tải.</p>');
+        console.error("TaskJS: AttachmentManager or loadAttachments method is missing.");
+    }
 
         // Mở modal
         $('#taskDetailModal').modal('show');

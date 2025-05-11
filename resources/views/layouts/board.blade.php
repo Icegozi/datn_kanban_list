@@ -75,7 +75,12 @@
 
             // Comment
             commentsStoreBase: @json(route('comments.store', ['task' => ':taskIdPlaceholder'])),
-            commentsDeleteBase: "{{ url('/tasks/:taskIdPlaceholder/comments/:commentIdPlaceholder') }}"
+            commentsDeleteBase: "{{ url('/tasks/:taskIdPlaceholder/comments/:commentIdPlaceholder') }}",
+
+            // --- Attachment Routes ---
+            attachmentsIndexBase: @json(route('attachments.index', ['task' => ':taskIdPlaceholder'])),
+            attachmentsStoreBase: @json(route('attachments.store', ['task' => ':taskIdPlaceholder'])),
+            attachmentsDestroyBase: @json(route('attachments.destroy', ['attachment' => ':attachmentIdPlaceholder'])),
         };
         // Pass the current board ID to JS if we are on a board page
         // Trong resources/views/layouts/board.blade.php
@@ -86,6 +91,7 @@
     <script src="{{ asset('plugins/jquery/dayjs.min.js')}}"></script>
     <script src="{{ asset('assets/js/comment.js')}}"></script>
     <script src="{{ asset('assets/js/due_date.js')}}"></script>
+    <script src="{{ asset('assets/js/attackment.js')}}"></script>
 
     {{-- Include modal HTML --}}
     @include('user.partials.task_detail_modal') 
