@@ -117,22 +117,26 @@ var TaskJS = (function ($) {
 
         // Xử lý Hoạt động và Bình luận
         const $activityLog = $('#modalTaskActivityLog');
-        const $commentLog = $('#modalDisplayComment')
-        $activityLog.empty();
-        let hasActivity = false;
-        const formatCreatedAt = dayjs(history.created_at).format("YYYY/MM/DD HH:mm:ss");
-        const formatUpdatedAt = dayjs(history.updated_at).format("YYYY/MM/DD HH:mm:ss");
+        const $commentLog = $('#modalDisplayComment'); // Sửa lại tên biến cho rõ ràng hơn
+        $activityLog.empty(); // Làm trống activity log
+        $commentLog.empty();  // <<<< SỬA 1: Làm trống comment log trước khi thêm mới
+
+        let hasActivityInLog = false; // Đổi tên biến để không bị nhầm với hasActivity cho comments
 
         if (taskData.task_histories && taskData.task_histories.length > 0) {
-            hasActivity = true;
+            hasActivityInLog = true;
             taskData.task_histories.forEach(history => {
+                // Di chuyển format vào trong loop để lấy đúng created_at của từng history item
+                const formatHistoryCreatedAt = history.created_at ? dayjs(history.created_at).format("DD/MM/YYYY HH:mm") : "Không xác định";
+                // const formatHistoryUpdatedAt = history.updated_at ? dayjs(history.updated_at).format("DD/MM/YYYY HH:mm") : "Không xác định";
+                // Thường thì history log sẽ hiển thị thời gian tạo record đó.
                 $activityLog.append(`
                     <div class="activity-item mb-2 pb-2 border-bottom">
                         <div class="d-flex align-items-start">
-                            <img src="https://i.pravatar.cc/150?img=3" class="rounded-circle mr-2" width="32" height="32" alt="${history.user_name}">
+                            <img src="${history.user_avatar || 'https://i.pravatar.cc/150?img=3'}" class="rounded-circle mr-2" width="32" height="32" alt="${history.user_name}">
                             <div>
-                                <p class="mb-0"><span class="text-success">${history.note || ''}</span></p>
-                                <small class="text-muted"> ${formatCreatedAt || formatUpdatedAt || "Không xác định"}</small>
+                                <p class="mb-0"><span class="font-weight-bold">${history.user_name || 'Hệ thống'}</span> ${history.note || ''}</p>
+                                <small class="text-muted">${formatHistoryCreatedAt}</small>
                             </div>
                         </div>
                     </div>
@@ -140,8 +144,14 @@ var TaskJS = (function ($) {
             });
         }
 
+        if (!hasActivityInLog) {
+            $activityLog.html('<p class="text-muted small">Chưa có hoạt động nào.</p>');
+        }
+
+        // Riêng cho comments, kiểm tra nếu không có comment thì hiển thị thông báo trong #modalDisplayComment
+        let hasComments = false;
         if (taskData.comments && taskData.comments.length > 0) {
-            hasActivity = true;
+            hasComments = true;
             taskData.comments.forEach(comment => {
                 $commentLog.append(`
                    <div class="media mb-3" id="comment-${comment.id}">
@@ -162,10 +172,10 @@ var TaskJS = (function ($) {
                 `);
             });
         }
-
-        if (!hasActivity) {
-            $activityLog.html('<p class="text-muted small">Chưa có hoạt động nào.</p>');
+        if (!hasComments && $commentLog.is(':empty')) { // Chỉ thêm nếu $commentLog thực sự trống
+             $commentLog.html('<p class="text-muted small text-center mt-2">Chưa có bình luận nào.</p>');
         }
+
 
         // === Xử lý Đính kèm (Attachments) ===
     if (typeof AttachmentManager !== 'undefined' && AttachmentManager.loadAttachments) {
@@ -396,6 +406,7 @@ var TaskJS = (function ($) {
         $('#modalDueDateBadge').text('Chưa đặt').removeClass('badge-info badge-warning badge-danger').addClass('badge-light');
         $('#modalTaskActivityLog').html('<p class="text-muted small">Lịch sử hoạt động và bình luận sẽ hiển thị ở đây.</p>');
         $('#modalNewCommentTextarea').val('');
+        $('#modalDisplayComment').val('');
     });
 
 
@@ -419,9 +430,9 @@ var TaskJS = (function ($) {
                         setTimeout(function () { isDragging = false; }, 50);
 
                         ui.item.removeClass('dragging');
-                        const $currentColumnContent = ui.item.closest('.column-content'); // Cột mà task được thả vào
+                        const $currentColumnContent = ui.item.closest('.column-content');
                         const $addCardPlaceholder = $currentColumnContent.find('.add-card-placeholder');
-                        $currentColumnContent.append($addCardPlaceholder); // Đảm bảo nút "Thêm" luôn ở cuối cột hiện tại
+                        $currentColumnContent.append($addCardPlaceholder); 
 
                         let taskId = ui.item.data('task-id');
                         let newColumnId = $currentColumnContent.data('column-id');

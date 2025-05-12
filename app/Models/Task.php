@@ -51,7 +51,10 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'assignees', 'task_id', 'user_id')->withTimestamps();
     }
-
+    public function checklists(): HasMany
+    {
+        return $this->hasMany(Checklist::class)->orderBy('position');
+    }
     public function board()
     {
         return $this->column()->first()->board()->first();

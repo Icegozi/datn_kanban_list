@@ -1,10 +1,10 @@
 <div class="modal fade" id="taskDetailModal" tabindex="-1" aria-labelledby="taskDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTaskTitleHeader">Chi tiết công việc</h5>
+            <div class="modal-header bg-secondary text-light">
+                <h5 class="modal-title" id="modalTaskTitleHeader" >Chi tiết công việc</h5>
                 <input type="hidden" id="modalTaskId">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -29,7 +29,8 @@
                                     {{-- Ảnh avatar người tham gia sẽ được thêm vào đây bằng JS --}}
                                     <span class="text-muted small">Chưa có ai tham gia.</span>
                                 </div>
-                                {{-- <button class="btn btn-sm btn-outline-secondary mt-2 add-assignee-btn"><i class="fas fa-plus"></i> Thêm</button> --}}
+                                {{-- <button class="btn btn-sm btn-outline-secondary mt-2 add-assignee-btn"><i
+                                        class="fas fa-plus"></i> Thêm</button> --}}
                             </div>
 
                             <div class="mb-3">
@@ -41,7 +42,8 @@
                                         <em class="text-muted">Thêm mô tả chi tiết hơn...</em>
                                     </div>
                                     <div class="description-box-edit" style="display: none;">
-                                        <textarea id="modalTaskDescriptionTextarea" class="form-control" rows="5" placeholder="Nhập mô tả..."></textarea>
+                                        <textarea id="modalTaskDescriptionTextarea" class="form-control" rows="5"
+                                            placeholder="Nhập mô tả..."></textarea>
                                         <div class="mt-2">
                                             <button class="btn btn-secondary btn-sm cancel-description-btn">Hủy</button>
                                         </div>
@@ -55,16 +57,36 @@
                                 <div id="modalTaskAttachments">
                                     <p class="text-muted small">Chưa có đính kèm.</p>
                                 </div>
-                                {{-- <button class="btn btn-sm btn-outline-secondary mt-1 add-attachment-btn"><i class="fas fa-plus"></i> Thêm đính kèm</button> --}}
+                                {{-- <button class="btn btn-sm btn-outline-secondary mt-1 add-attachment-btn"><i
+                                        class="fas fa-plus"></i> Thêm đính kèm</button> --}}
                             </div>
 
                             <div class="mb-3">
-                                <h6 class="font-weight-bold text-secondary"><i class="fas fa-tasks mr-2"></i>CHECKLIST
+                                <h6 class="font-weight-bold text-secondary">
+                                    <i class="fas fa-tasks mr-2"></i>CHECKLIST
+                                    <button class="btn btn-sm btn-outline-secondary py-0 px-1 ml-2"
+                                        id="toggleChecklistVisibilityBtn" title="Hiện/Ẩn Checklist">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <span id="checklistProgress" class="ml-2 small text-muted"></span>
                                 </h6>
-                                <div id="modalTaskChecklists">
-                                    <p class="text-muted small">Chưa có checklist.</p>
+                                <div id="modalTaskChecklistSection" style="display: none;">
+                                    <div id="modalTaskChecklistsContainer">
+                                        {{-- Content will be loaded by JS --}}
+                                        <p class="text-muted small">Bấm vào nút "Checklist" ở cột phải để quản lý.</p>
+                                    </div>
+                                    <div class="add-checklist-item-form mt-2" style="display: none;"> {{-- Form also
+                                        hidden initially --}}
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control" id="newChecklistItemTitle"
+                                                placeholder="Thêm mục mới...">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" id="saveNewChecklistItemBtn"
+                                                    type="button">Thêm</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                {{-- <button class="btn btn-sm btn-outline-secondary mt-1 add-checklist-btn"><i class="fas fa-plus"></i> Thêm checklist</button> --}}
                             </div>
                             <hr>
                             <div class="mb-3">
@@ -72,7 +94,8 @@
                                     LUẬN</h6>
                                 <div class="add-comment-section mb-3">
                                     <div class="input-group">
-                                        <textarea id="modalNewCommentTextarea" class="form-control border-right-0 rounded-left" rows="1"
+                                        <textarea id="modalNewCommentTextarea"
+                                            class="form-control border-right-0 rounded-left" rows="1"
                                             placeholder="Viết bình luận..."></textarea>
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-primary rounded-right"
@@ -99,8 +122,9 @@
                                         id="modalAssignMembersTrigger"><i
                                             class="far fa-user fa-fw mr-2 text-primary"></i>Người tham gia</a>
                                     <a href="#" class="list-group-item list-group-item-action modal-action-btn"
-                                        id="modalManageChecklistTrigger"><i
-                                            class="far fa-check-square fa-fw mr-2 text-info"></i>Checklist</a>
+                                        id="modalManageChecklistTrigger"> {{-- This is the trigger button --}}
+                                        <i class="far fa-check-square fa-fw mr-2 text-info"></i>Checklist
+                                    </a>
                                     <a href="#" class="list-group-item list-group-item-action modal-action-btn"
                                         id="modalSetDueDateTrigger">
                                         <i class="far fa-calendar-alt fa-fw mr-2 text-warning"></i>Ngày hết hạn
@@ -109,8 +133,8 @@
                                     </a>
                                     <!-- Chèn input datepicker ẩn -->
                                     <div id="dueDatePickerContainer" style="display: none; margin: 0.5rem;">
-                                        <input type="text" id="modalDueDateInput"
-                                            class="form-control form-control-sm" placeholder="Chọn ngày..." readonly />
+                                        <input type="text" id="modalDueDateInput" class="form-control form-control-sm"
+                                            placeholder="Chọn ngày..." readonly />
                                         <div class="mt-2 text-right">
                                         </div>
                                     </div>
@@ -134,7 +158,7 @@
                                 </div>
 
                                 <div id="modalTaskActivityLog"
-                                    style="max-height: 300px; overflow-y: auto; margin-top:20px;">
+                                    style="min-height: 300px; overflow-y: auto; margin-top:20px; height:100%">
                                     <p class="text-muted small">Lịch sử hoạt động sẽ hiển thị ở đây.</p>
                                 </div>
                             </div>

@@ -81,6 +81,13 @@
             attachmentsIndexBase: @json(route('attachments.index', ['task' => ':taskIdPlaceholder'])),
             attachmentsStoreBase: @json(route('attachments.store', ['task' => ':taskIdPlaceholder'])),
             attachmentsDestroyBase: @json(route('attachments.destroy', ['attachment' => ':attachmentIdPlaceholder'])),
+
+             // --- Checklist Routes ---
+            checklistsIndexBase: @json(route('checklists.index', ['task' => ':taskIdPlaceholder'])),
+            checklistsStoreBase: @json(route('checklists.store', ['task' => ':taskIdPlaceholder'])),
+            checklistsUpdateBase: @json(route('checklists.update', ['checklist' => ':checklistIdPlaceholder'])),
+            checklistsDestroyBase: @json(route('checklists.destroy', ['checklist' => ':checklistIdPlaceholder'])),
+            checklistsReorderBase: @json(route('checklists.reorder', ['task' => ':taskIdPlaceholder'])),
         };
         // Pass the current board ID to JS if we are on a board page
         // Trong resources/views/layouts/board.blade.php
@@ -92,7 +99,7 @@
     <script src="{{ asset('assets/js/comment.js')}}"></script>
     <script src="{{ asset('assets/js/due_date.js')}}"></script>
     <script src="{{ asset('assets/js/attackment.js')}}"></script>
-
+    <script src="{{ asset('assets/js/checklist.js') }}"></script>
     {{-- Include modal HTML --}}
     @include('user.partials.task_detail_modal') 
    

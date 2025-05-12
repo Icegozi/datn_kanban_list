@@ -18,7 +18,6 @@ body {
 }
 
 
-
 html,
 body {
     height: 100%;
@@ -324,11 +323,27 @@ body {
 
  /*rename board*/
 
-.line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;    /* Giới hạn 2 dòng */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+/*checklist*/
+.text-decoration-line-through {
+    text-decoration: line-through;
+}
+
+.checklist-item .checklist-item-title {
+    cursor: pointer; 
+    padding: 0.25rem 0; 
+    display: inline-block;
+    width: calc(100% - 20px);
+}
+.checklist-item .form-check {
+    display: flex; 
+    align-items: center;
+}
+.checklist-item .form-check-input {
+    margin-top: 0; 
+    margin-right: 0.5rem;
+}
+.checklist-item-actions, .checklist-item-edit-controls {
+    white-space: nowrap;
 }
 

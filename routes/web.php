@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\ChecklistController;
 use App\Http\Controllers\User\ColumnController;
 use App\Http\Controllers\User\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -74,13 +75,18 @@ Route::middleware(['auth'])->group(function () {
     // Route::put('/tasks/{task}/comments/{commentId}', [CommentController::class, 'update'])->name('comments.update');
     Route::delete('/tasks/{task}/comments/{commentId}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
-    // attackment
-
-    // Attachment routes
+    // Attachment 
     Route::get('/tasks/{task}/attachments', [AttachmentController::class, 'index'])->name('attachments.index'); 
     Route::post('/tasks/{task}/attachments', [AttachmentController::class, 'store'])->name('attachments.store');
     Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachments.destroy');
     Route::get('/attachments/{attachment}/download', [AttachmentController::class, 'download'])->name('attachments.download');
+
+    // --- Checklist 
+    Route::get('/tasks/{task}/checklists', [ChecklistController::class, 'index'])->name('checklists.index');
+    Route::post('/tasks/{task}/checklists', [ChecklistController::class, 'store'])->name('checklists.store');
+    Route::put('/checklists/{checklist}', [ChecklistController::class, 'update'])->name('checklists.update'); 
+    Route::delete('/checklists/{checklist}', [ChecklistController::class, 'destroy'])->name('checklists.destroy');
+    Route::post('/tasks/{task}/checklists/reorder', [ChecklistController::class, 'reorder'])->name('checklists.reorder');
 
     // ==== ROUTE ĐẶC BIỆT CHO ADMIN ====
     Route::middleware('is_admin')->group(function () {

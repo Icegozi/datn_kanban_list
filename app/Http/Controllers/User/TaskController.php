@@ -116,6 +116,25 @@ class TaskController extends Controller
             Log::warning("Task ID {$task->id}: comments was not a collection, possibly null or load issue.");
         }
 
+         // Format checklists if they exist
+         if ($task->checklists instanceof \Illuminate\Database\Eloquent\Collection) {
+            // No need to transform here if the Checklist model's $casts and $appends handle it well
+            // Or if you want specific formatting:
+            $task->checklists->transform(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'is_done' => $item->is_done,
+                    'position' => $item->position,
+                    'task_id' => $item->task_id,
+                ];
+            });
+        } else {
+            $task->checklists = collect([]);
+            Log::warning("Task ID {$task->id}: checklists was not a collection, possibly null or load issue.");
+        }
+
+
         return response()->json([
             'success' => true,
             'task' => $task,
@@ -145,7 +164,9 @@ class TaskController extends Controller
                     'formatted_due_date' => $task->due_date ? $task->due_date->format('M d') : null,
                     'position' => $task->position,
                     'column_id' => $task->column_id,
-                    // 'assignees' => $task->assignees->map(function($assignee) { /* ... */ }),
+                    'assignees' => $task->assignees->map(function ($assignee) {
+                        return ['id' => $assignee->id, 'name' => $assignee->name, 'email' => $assignee->email];
+                    }),
                 ]
             ]);
         } catch (\Exception $e) {
