@@ -45,7 +45,7 @@ class TaskController extends Controller
     public function store(TaskRequest $request, Column $column)
     {
         $board = $column->board;
-        $this->authorizeBoardAccess($board,['board_editor','board_member_manager']);
+        $this->authorizeBoardAccess($board, ['board_editor', 'board_member_manager']);
 
         try {
             $taskInstance = new Task();
@@ -65,11 +65,16 @@ class TaskController extends Controller
                     'description' => $createdTask->description,
                     'priority' => $createdTask->priority,
                     'due_date' => $createdTask->due_date ? $createdTask->due_date->toDateString() : null,
-                    'formatted_due_date' => $createdTask->due_date ? $createdTask->due_date->format('d M') : null, // Ví dụ: 25 Th04
+                    'formatted_due_date' => $createdTask->due_date ? $createdTask->due_date->format('d M') : null,
                     'position' => $createdTask->position,
                     'column_id' => $createdTask->column_id,
-                    'assignees' => $createdTask->assignees->map(function ($assignee) {
-                        return ['id' => $assignee->id, 'name' => $assignee->name, 'email' => $assignee->email];
+                    'assignees' => $createdTask->assignees->map(function ($user) {
+                        return [
+                            'id' => $user->id,
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'avatar_url' => $user->avatar_url ?? 'https://i.pravatar.cc/30?u=' . urlencode($user->email),
+                        ];
                     }),
                 ]
             ], 201);
@@ -82,7 +87,7 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        $this->authorizeTaskAccess($task,['board_viewer','board_editor','board_member_manager']);
+        $this->authorizeTaskAccess($task, ['board_viewer', 'board_editor', 'board_member_manager']);
         $task->loadDetails();
 
         if ($task->column) {
@@ -96,23 +101,23 @@ class TaskController extends Controller
         $task->formatted_due_date = $task->due_date ? $task->due_date->format('d/m/Y') : null;
 
         if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
-           $task->task_histories->transform(function ($history) {
-            $user = $history->user;
+            $task->task_histories->transform(function ($history) {
+                $user = $history->user;
 
-            $timestamp = $history->updated_at ?? $history->created_at;
-            $formatted_time = $timestamp ? \Carbon\Carbon::parse($timestamp)->format('Y/m/d H:i:s') : 'Không rõ thời gian';
+                $timestamp = $history->updated_at ?? $history->created_at;
+                $formatted_time = $timestamp ? \Carbon\Carbon::parse($timestamp)->format('Y/m/d H:i:s') : 'Không rõ thời gian';
 
-            return [
-                'id' => $history->id,
-                'user_id' => $user?->id,
-                'user_name' => $user?->name ?? 'Người dùng không xác định',
-                'user_avatar' => $user ? 'https://i.pravatar.cc/40?u=' . urlencode($user->email) : 'https://i.pravatar.cc/40?u=unknown',
-                'action' => $history->action,
-                'note' => $history->note,
-                'created_at' => $history->created_at->format('Y/m/d H:i:s'),
-                'updated_at' => $formatted_time,
-            ];
-        });
+                return [
+                    'id' => $history->id,
+                    'user_id' => $user?->id,
+                    'user_name' => $user?->name ?? 'Người dùng không xác định',
+                    'user_avatar' => $user ? 'https://i.pravatar.cc/40?u=' . urlencode($user->email) : 'https://i.pravatar.cc/40?u=unknown',
+                    'action' => $history->action,
+                    'note' => $history->note,
+                    'created_at' => $history->created_at->format('Y/m/d H:i:s'),
+                    'updated_at' => $formatted_time,
+                ];
+            });
         } else {
             $task->task_histories = collect([]);
             Log::warning("Task ID {$task->id}: task_histories was not a collection, possibly null or load issue.");
@@ -130,8 +135,8 @@ class TaskController extends Controller
             Log::warning("Task ID {$task->id}: comments was not a collection, possibly null or load issue.");
         }
 
-         // Format checklists if they exist
-         if ($task->checklists instanceof \Illuminate\Database\Eloquent\Collection) {
+        // Format checklists if they exist
+        if ($task->checklists instanceof \Illuminate\Database\Eloquent\Collection) {
             // No need to transform here if the Checklist model's $casts and $appends handle it well
             // Or if you want specific formatting:
             $task->checklists->transform(function ($item) {
@@ -161,7 +166,7 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
-        $this->authorizeTaskAccess($task,['board_member_manager','board_editor']);
+        $this->authorizeTaskAccess($task, ['board_member_manager', 'board_editor']);
 
         try {
             $task->updateDetails($request->validated());
@@ -199,7 +204,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        $this->authorizeTaskAccess($task,['board_member_manager']);
+        $this->authorizeTaskAccess($task, ['board_member_manager']);
 
         try {
             $task->deleteWithHistory();
@@ -218,7 +223,7 @@ class TaskController extends Controller
     public function updatePosition(UpdateTaskPositionRequest $request)
     {
         $task = Task::findOrFail($request->task_id);
-        $board = $this->authorizeTaskAccess($task,['board_editor','board_member_manager']);
+        $board = $this->authorizeTaskAccess($task, ['board_editor', 'board_member_manager']);
         $taskHistory = new TaskHistory();
         $oldColumn = Column::find($task->column_id);
         $newColumn = Column::findOrFail($request->new_column_id);
@@ -244,7 +249,7 @@ class TaskController extends Controller
             }
 
             $action = "Di chuyển";
-            
+
 
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Vị trí nhiệm vụ đã cập nhật.']);

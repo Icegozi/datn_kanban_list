@@ -1,7 +1,7 @@
 var TaskJS = (function ($) {
     let isDragging = false;
-    let currentOpenTaskId = null; 
-    let originalTaskData = {}; 
+    let currentOpenTaskId = null;
+    let originalTaskData = {};
     function showNotification(message, type = 'success') {
         alert(message);
         console.log(type.toUpperCase() + ": " + message);
@@ -82,7 +82,7 @@ var TaskJS = (function ($) {
         const $descTextarea = $('#modalTaskDescriptionTextarea');
 
         if (taskData.description) {
-            $descDisplay.html(taskData.description.replace(/\n/g, '<br>')); 
+            $descDisplay.html(taskData.description.replace(/\n/g, '<br>'));
         } else {
             $descDisplay.html('<em class="text-muted">Thêm mô tả chi tiết hơn...</em>');
         }
@@ -90,23 +90,31 @@ var TaskJS = (function ($) {
         $descEdit.hide();
         $descDisplay.show();
 
-        // Xử lý Người tham gia (Assignees)
+        // Xử lý assignees
         const $assigneesContainer = $('#modalTaskAssignees');
         $assigneesContainer.empty();
+
         if (taskData.assignees && taskData.assignees.length > 0) {
             taskData.assignees.forEach(assignee => {
-                $assigneesContainer.append(
-                    `<img src="https://i.pravatar.cc/30?u=${encodeURIComponent(assignee.email)}"
-                         class="rounded-circle border border-white mr-n2" {{-- mr-n2 để chồng ảnh --}}
-                         width="30" height="30"
-                         title="${assignee.name}"
-                         alt="${assignee.name}">`
-                );
+                const assigneeName = assignee.name || 'Không rõ tên';
+                const assigneeAvatar = assignee.avatar_url || 'https://i.pravatar.cc/30?u=' + encodeURIComponent(assignee.email || `unknown_${Date.now()}`);
+                
+                $assigneesContainer.append(`
+            <img src="${assigneeAvatar}"
+                 class="rounded-circle border border-white mr-n2" 
+                 width="30" height="30"
+                 title="${assigneeName}"
+                 alt="${assigneeName}">
+            <span class="ml-2 align-self-center">${assigneeName}</span>
+        `);
             });
         } else {
             $assigneesContainer.html('<span class="text-muted small">Chưa có ai tham gia.</span>');
         }
 
+         if (typeof AssigneeManager !== 'undefined' && AssigneeManager.setInitialTaskData) {
+            AssigneeManager.setInitialTaskData(taskData.id, taskData.assignees);
+        }
         // Xử lý Ngày hết hạn
         $('#modalDueDateBadge').text(taskData.formatted_due_date || 'Chưa đặt');
         if (taskData.due_date) {
@@ -117,19 +125,16 @@ var TaskJS = (function ($) {
 
         // Xử lý Hoạt động và Bình luận
         const $activityLog = $('#modalTaskActivityLog');
-        const $commentLog = $('#modalDisplayComment'); // Sửa lại tên biến cho rõ ràng hơn
-        $activityLog.empty(); // Làm trống activity log
-        $commentLog.empty();  // <<<< SỬA 1: Làm trống comment log trước khi thêm mới
+        const $commentLog = $('#modalDisplayComment');
+        $activityLog.empty(); 
+        $commentLog.empty();  
 
-        let hasActivityInLog = false; // Đổi tên biến để không bị nhầm với hasActivity cho comments
+        let hasActivityInLog = false; 
 
         if (taskData.task_histories && taskData.task_histories.length > 0) {
             hasActivityInLog = true;
             taskData.task_histories.forEach(history => {
-                // Di chuyển format vào trong loop để lấy đúng created_at của từng history item
-                const formatHistoryCreatedAt = history.created_at ? dayjs(history.created_at).format("DD/MM/YYYY HH:mm") : "Không xác định";
-                // const formatHistoryUpdatedAt = history.updated_at ? dayjs(history.updated_at).format("DD/MM/YYYY HH:mm") : "Không xác định";
-                // Thường thì history log sẽ hiển thị thời gian tạo record đó.
+                const formatHistoryCreatedAt = history.created_at ? dayjs(history.created_at).format("DD/MM/YYYY HH:mm") : "";
                 $activityLog.append(`
                     <div class="activity-item mb-2 pb-2 border-bottom">
                         <div class="d-flex align-items-start">
@@ -172,19 +177,18 @@ var TaskJS = (function ($) {
                 `);
             });
         }
-        if (!hasComments && $commentLog.is(':empty')) { // Chỉ thêm nếu $commentLog thực sự trống
-             $commentLog.html('<p class="text-muted small text-center mt-2">Chưa có bình luận nào.</p>');
+        if (!hasComments && $commentLog.is(':empty')) { 
+            $commentLog.html('<p class="text-muted small text-center mt-2">Chưa có bình luận nào.</p>');
         }
 
 
         // === Xử lý Đính kèm (Attachments) ===
-    if (typeof AttachmentManager !== 'undefined' && AttachmentManager.loadAttachments) {
-        // AttachmentManager.setCurrentTaskId(taskData.id); // Đã được gọi bên trong loadAttachments
-        AttachmentManager.loadAttachments(taskData.id);
-    } else {
-        $('#modalTaskAttachments').html('<p class="text-danger small">Lỗi: Mô-đun đính kèm chưa được tải.</p>');
-        console.error("TaskJS: AttachmentManager or loadAttachments method is missing.");
-    }
+        if (typeof AttachmentManager !== 'undefined' && AttachmentManager.loadAttachments) {
+            AttachmentManager.loadAttachments(taskData.id);
+        } else {
+            $('#modalTaskAttachments').html('<p class="text-danger small">Lỗi: Mô-đun đính kèm chưa được tải.</p>');
+            console.error("TaskJS: AttachmentManager or loadAttachments method is missing.");
+        }
 
         // Mở modal
         $('#taskDetailModal').modal('show');
@@ -282,78 +286,78 @@ var TaskJS = (function ($) {
 
 
     $(document).on('click', '#modalArchiveTaskTrigger', function () {
-    const taskId = $('#modalTaskId').val();
-    const $btn   = $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Đang lưu...');
-    const url    = getRoute('tasksUpdateBase', { taskIdPlaceholder: taskId });
+        const taskId = $('#modalTaskId').val();
+        const $btn = $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i>Đang lưu...');
+        const url = getRoute('tasksUpdateBase', { taskIdPlaceholder: taskId });
 
-    if (!taskId) {
-        showNotification('Không tìm thấy ID công việc.', 'error');
-        return;
-    }
-
-    const title        = $('#modalTaskTitleInput').val().trim();
-    const description  = $('#modalTaskDescriptionTextarea').val().trim();
-    const newDueDate   = $('#modalDueDateInput').val().trim();
-
-    $.ajax({
-        url: url,
-        type: 'POST',
-        data: {
-            _method: 'PUT',
-            title: title,
-            description: description,
-            due_date: newDueDate,
-            _token: $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function (res) {
-            if (res.success && res.task) {
-                const task = res.task;
-
-                // === MÔ TẢ ===
-                const displayDesc = task.description 
-                    ? task.description.replace(/\n/g, '<br>') 
-                    : '<em class="text-muted">Thêm mô tả chi tiết hơn...</em>';
-                $('#modalTaskDescriptionContainer .description-box-display').html(displayDesc);
-                originalTaskData.description = task.description;
-
-                // === NGÀY HẾT HẠN ===
-                const badge = task.due_date 
-                    ? dayjs(task.due_date).format('DD/MM/YYYY') 
-                    : 'Chưa đặt';
-                $('#modalDueDateBadge').text(badge);
-                originalTaskData.due_date = task.due_date;
-
-                // === CẬP NHẬT THẺ TRÊN KANBAN ===
-                const $card = $(`.kanban-card[data-task-id="${taskId}"]`);
-                $card.find('.task-due-date').remove();
-                if (task.due_date) {
-                    $card.append(`<small class="task-due-date text-warning d-block mt-1">⏰ ${badge}</small>`);
-                }
-                $card.find('h5').text(title);
-                $card.find('.task-description-preview').text(task.description ? task.description.substring(0, 50) + '...' : '');
-
-                showNotification('Đã cập nhật mô tả, tiêu đề và ngày hết hạn.', 'success');
-            } else {
-                showNotification(res.message || 'Lỗi cập nhật công việc.', 'error');
-            }
-        },
-        error: function (xhr) {
-            showNotification((xhr.responseJSON?.message || xhr.statusText), 'error');
-        },
-        complete: function () {
-            $btn.prop('disabled', false).html('<i class="fas fa-archive fa-fw mr-2"></i>Lưu thay đổi');
-            $('#modalTaskDescriptionContainer .description-box-edit').hide();
-            $('#modalTaskDescriptionContainer .description-box-display').show();
-            $('#dueDatePickerContainer').hide();
+        if (!taskId) {
+            showNotification('Không tìm thấy ID công việc.', 'error');
+            return;
         }
+
+        const title = $('#modalTaskTitleInput').val().trim();
+        const description = $('#modalTaskDescriptionTextarea').val().trim();
+        const newDueDate = $('#modalDueDateInput').val().trim();
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                _method: 'PUT',
+                title: title,
+                description: description,
+                due_date: newDueDate,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (res) {
+                if (res.success && res.task) {
+                    const task = res.task;
+
+                    // === MÔ TẢ ===
+                    const displayDesc = task.description
+                        ? task.description.replace(/\n/g, '<br>')
+                        : '<em class="text-muted">Thêm mô tả chi tiết hơn...</em>';
+                    $('#modalTaskDescriptionContainer .description-box-display').html(displayDesc);
+                    originalTaskData.description = task.description;
+
+                    // === NGÀY HẾT HẠN ===
+                    const badge = task.due_date
+                        ? dayjs(task.due_date).format('DD/MM/YYYY')
+                        : 'Chưa đặt';
+                    $('#modalDueDateBadge').text(badge);
+                    originalTaskData.due_date = task.due_date;
+
+                    // === CẬP NHẬT THẺ TRÊN KANBAN ===
+                    const $card = $(`.kanban-card[data-task-id="${taskId}"]`);
+                    $card.find('.task-due-date').remove();
+                    if (task.due_date) {
+                        $card.append(`<small class="task-due-date text-warning d-block mt-1">⏰ ${badge}</small>`);
+                    }
+                    $card.find('h5').text(title);
+                    $card.find('.task-description-preview').text(task.description ? task.description.substring(0, 50) + '...' : '');
+
+                    showNotification('Đã cập nhật mô tả, tiêu đề và ngày hết hạn.', 'success');
+                } else {
+                    showNotification(res.message || 'Lỗi cập nhật công việc.', 'error');
+                }
+            },
+            error: function (xhr) {
+                showNotification((xhr.responseJSON?.message || xhr.statusText), 'error');
+            },
+            complete: function () {
+                $btn.prop('disabled', false).html('<i class="fas fa-archive fa-fw mr-2"></i>Lưu thay đổi');
+                $('#modalTaskDescriptionContainer .description-box-edit').hide();
+                $('#modalTaskDescriptionContainer .description-box-display').show();
+                $('#dueDatePickerContainer').hide();
+            }
+        });
     });
-});
 
 
     // Xóa Task từ Modal
-    $(document).on('click', '#modalDeleteTaskTrigger', function () { 
+    $(document).on('click', '#modalDeleteTaskTrigger', function () {
         const taskId = $('#modalTaskId').val();
-        
+
         if (!taskId) {
             showNotification('Không tìm thấy ID công việc để xóa.', 'error');
             return;
@@ -432,7 +436,7 @@ var TaskJS = (function ($) {
                         ui.item.removeClass('dragging');
                         const $currentColumnContent = ui.item.closest('.column-content');
                         const $addCardPlaceholder = $currentColumnContent.find('.add-card-placeholder');
-                        $currentColumnContent.append($addCardPlaceholder); 
+                        $currentColumnContent.append($addCardPlaceholder);
 
                         let taskId = ui.item.data('task-id');
                         let newColumnId = $currentColumnContent.data('column-id');

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\User\AssigneeController;
 use App\Http\Controllers\User\AttachmentController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\BoardController;
@@ -98,9 +99,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/invitations/accept/{token}', [App\Http\Controllers\User\BoardMembershipController::class, 'acceptInvitation'])
         ->name('invitations.accept')
         ->middleware('signed'); 
-        Route::middleware('is_admin')->group(function () {
-            Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-        // Các chức năng nâng cao khác dành riêng cho admin có thể đặt ở đây
+    // ---Assignee
+    Route::post('/tasks/{task}/assignees', [AssigneeController::class, 'store'])->name('tasks.assignees.store');
+    Route::put('/tasks/{task}/assignees/{user}', [AssigneeController::class, 'update'])->name('tasks.assignee.update');
+    Route::delete('/tasks/{task}/assignees/{user}', [AssigneeController::class, 'destroy'])->name('tasks.assignees.destroy');
+    Route::get('/boards/{board}/assigned-users', [AssigneeController::class, 'assignedUsers'])->name('boards.assignedUsers');
+
+    Route::middleware('is_admin')->group(function () {
+        Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        // Các chức năng danh cho admin
     });
 });

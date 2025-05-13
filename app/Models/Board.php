@@ -31,6 +31,11 @@ class Board extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(BoardInvitation::class);
+    }
+
     // Lấy tất cả board theo user_id
     public static function getBoardsByUser(int $userId)
     {
@@ -109,8 +114,13 @@ class Board extends Model
         return array_values($members);
     }
 
-    public function invitations(): HasMany
+    public function assignedUsers()
     {
-        return $this->hasMany(BoardInvitation::class);
+        return User::whereIn('id', function ($query) {
+            $query->select('permission_users.user_id')
+                ->from('permission_users')
+                ->join('board_permissions', 'permission_users.id', '=', 'board_permissions.permission_user_id')
+                ->where('board_permissions.board_id', $this->id);
+        })->get();
     }
 }

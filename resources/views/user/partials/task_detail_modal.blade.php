@@ -24,7 +24,7 @@
 
                             <div class="mb-3">
                                 <h6 class="font-weight-bold text-secondary"><i
-                                        class="fas fa-user-friends mr-2"></i>NGƯỜI THAM GIA</h6>
+                                        class="fas fa-user-friends mr-2"></i>NGƯỜI PHỤ TRÁCH</h6>
                                 <div id="modalTaskAssignees" class="d-flex align-items-center flex-wrap">
                                     {{-- Ảnh avatar người tham gia sẽ được thêm vào đây bằng JS --}}
                                     <span class="text-muted small">Chưa có ai tham gia.</span>
@@ -120,7 +120,7 @@
                                 <div class="list-group list-group-flush mb-3">
                                     <a href="#" class="list-group-item list-group-item-action modal-action-btn"
                                         id="modalAssignMembersTrigger"><i
-                                            class="far fa-user fa-fw mr-2 text-primary"></i>Người tham gia</a>
+                                            class="far fa-user fa-fw mr-2 text-primary"></i>Người phụ trách</a>
                                     <a href="#" class="list-group-item list-group-item-action modal-action-btn"
                                         id="modalManageChecklistTrigger"> {{-- This is the trigger button --}}
                                         <i class="far fa-check-square fa-fw mr-2 text-info"></i>Checklist
