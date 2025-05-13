@@ -14,7 +14,7 @@ $(document).ready(function () {
         const memberId = $(this).closest('tr').data('member-id');
         const $select = $(this);
 
-        if (!confirm(`Thay đổi vai trò của thành viên này thành "${$select.find('option:selected').text()}"?`)) {
+        if (!confirm(`Thay đổi vai trò của thành viên này thành "${$select.find('option:selected').text().trim()}"?`)) {
             return;
         }
 

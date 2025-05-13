@@ -76,7 +76,7 @@
             boardsInvitationsCancel: @json(route('boards.invitations.cancel', ['board' => ':boardIdPlaceholder', 'invitation' => ':invitationIdPlaceholder'])),
             invitationsAccept: @json(route('invitations.accept', ['token' => ':tokenPlaceholder'])),
         };
-        window.boardId = @json($board->id);
+        window.boardId =  @json(isset($board) ? $board->id : null);
         window.csrfToken = "{{ csrf_token() }}";
     </script>
     <script src="{{ asset('assets/js/user.js')}}"></script>

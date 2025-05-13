@@ -257,7 +257,7 @@ var TaskJS = (function ($) {
             },
             error: function (jqXHR) {
                 $('#modalTaskTitleInput').val(originalTaskData.title); // Hoàn tác
-                showNotification('Lỗi AJAX khi cập nhật tiêu đề: ' + (jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
+                showNotification((jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
             }
         });
     }).on('keypress', function (e) {
@@ -338,7 +338,7 @@ var TaskJS = (function ($) {
             }
         },
         error: function (xhr) {
-            showNotification('Lỗi AJAX: ' + (xhr.responseJSON?.message || xhr.statusText), 'error');
+            showNotification((xhr.responseJSON?.message || xhr.statusText), 'error');
         },
         complete: function () {
             $btn.prop('disabled', false).html('<i class="fas fa-archive fa-fw mr-2"></i>Lưu thay đổi');
@@ -381,7 +381,7 @@ var TaskJS = (function ($) {
                 }
             },
             error: function (jqXHR) {
-                showNotification('Lỗi AJAX khi xóa công việc: ' + (jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
+                showNotification((jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
             },
             complete: function () {
                 $button.removeClass('disabled').html('<i class="fas fa-trash-alt fa-fw mr-2"></i>Xóa công việc');
@@ -458,14 +458,14 @@ var TaskJS = (function ($) {
                             },
                             success: function (r) {
                                 if (!r.success) {
-                                    showNotification(r.message || 'Lỗi cập nhật vị trí.', 'error');
+                                    showNotification(r.message || 'Cập nhật vị trí thất bại.', 'error');
                                     $(".column-content").sortable("cancel");
                                 } else {
 
                                 }
                             },
                             error: function (e) {
-                                showNotification('Lỗi AJAX cập nhật vị trí.', 'error');
+                                showNotification('Cập nhật vị trí thất bại.', 'error');
                                 $(".column-content").sortable("cancel");
                             }
                         });

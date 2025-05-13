@@ -28,7 +28,7 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name' => 'board_member_manager',
-                'description' => 'Quyền mời và quản lý thành viên',
+                'description' => 'Quyền mời và quản lý thành viên trong bảng',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

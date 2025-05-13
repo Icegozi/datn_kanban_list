@@ -21,7 +21,7 @@ class BoardController extends Controller
             }
         }
 
-        abort(403, 'Bạn không có quyền truy cập!');
+        abort(403, 'Bạn không có quyền thực hiện thao tác!');
     }
 
     public function store(BoardRequest $request)

@@ -251,9 +251,9 @@ var AttachmentManager = (function ($) {
                 }
             },
             error: function(jqXHR) {
-                let errorMsg = 'Lỗi AJAX khi tải lên: ';
+                let errorMsg = '';
                 if (jqXHR.responseJSON && jqXHR.responseJSON.errors && jqXHR.responseJSON.errors['attachments.0']) {
-                     errorMsg += jqXHR.responseJSON.errors['attachments.0'].join(', '); // Hiển thị lỗi validation cụ thể nếu có
+                     errorMsg += jqXHR.responseJSON.errors['attachments.0'].join(', '); 
                 } else {
                     errorMsg += (jqXHR.responseJSON?.message || jqXHR.statusText);
                 }
@@ -309,7 +309,7 @@ var AttachmentManager = (function ($) {
                 }
             },
             error: function(jqXHR) {
-                showNotification('Lỗi AJAX khi xóa: ' + (jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
+                showNotification((jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
                 $deleteButton.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>'); // Reset nút
             }
         });

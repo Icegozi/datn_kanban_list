@@ -24,7 +24,7 @@ class AttachmentController extends Controller
                 return $board;
             }
         }
-        abort(403, 'Bạn không có quyền truy cập!');
+        abort(403, 'Bạn không có quyền thực hiện thao tác!');
     }
 
     private function authorizeBoardAccess(Board $board, array $requiredPermissions = [])
@@ -36,7 +36,7 @@ class AttachmentController extends Controller
             }
         }
 
-        abort(403, 'Bạn không có quyền truy cập!');
+        abort(403, 'Bạn không có quyền thực hiện thao tác!');
     }
     public function store(Request $request, Task $task)
     {
