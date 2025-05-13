@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Board;
 use App\Models\Column;
+use App\Models\Task;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -13,19 +14,37 @@ use Illuminate\Validation\Rule;
 class ColumnController extends Controller
 {
      // Authorization Helper
-     private function authorizeBoardAccess(Board $board)
-     {
-         if ($board->user_id !== Auth::id()) {
-             abort(403, 'Unauthorized action.');
-         }
-     }
+     private function authorizeTaskAccess(Task $task, array $requiredPermissions = [])
+    {
+        $user = Auth::user();
+        $board = $task->column->board;
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
+        }
+        abort(403, 'Bạn không có quyền truy cập!');
+    }
+
+    private function authorizeBoardAccess(Board $board, array $requiredPermissions = [])
+    {
+        $user = Auth::user();
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
+        }
+
+        abort(403, 'Bạn không có quyền truy cập!');
+    }
+
  
      /**
       * Store a newly created column in storage.
       */
      public function store(Request $request, Board $board)
      {
-         $this->authorizeBoardAccess($board);
+         $this->authorizeBoardAccess($board,['board_viewer','board_editor','board_member_manager']);
  
          $validated = $request->validate([
              'name' => [
@@ -75,7 +94,7 @@ class ColumnController extends Controller
       */
      public function update(Request $request, Board $board, Column $column)
      {
-         $this->authorizeBoardAccess($board);
+        $this->authorizeBoardAccess($board,['board_editor','board_member_manager']);
  
          // Ensure the column actually belongs to the board in the URL
          if ($column->board_id !== $board->id) {
@@ -113,7 +132,7 @@ class ColumnController extends Controller
       */
      public function destroy(Board $board, Column $column)
      {
-          $this->authorizeBoardAccess($board);
+        $this->authorizeBoardAccess($board,['board_member_manager']);
  
          if ($column->board_id !== $board->id) {
               abort(404);
@@ -156,7 +175,7 @@ class ColumnController extends Controller
       */
      public function reorder(Request $request, Board $board)
      {
-         $this->authorizeBoardAccess($board);
+        $this->authorizeBoardAccess($board,['board_editor','board_member_manager']);
  
          $request->validate([
              'order' => 'required|array',

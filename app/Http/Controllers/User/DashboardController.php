@@ -14,10 +14,24 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Fetch boards belonging to this user, ordered by creation date (newest first)
-        $boards = $user->boards()->orderBy('created_at', 'desc')->get();
+        // Use the new method to get all accessible boards
+        $accessibleBoards = $user->getAllAccessibleBoards();
 
-        return view('user.dashboard', compact('boards')); 
+        // You might want to sort them, e.g., by last updated or by name
+        // The getAllAccessibleBoards method already sorts by name.
+        // If you want a different sort here:
+        // $boards = $accessibleBoards->sortByDesc('updated_at');
+        $boards = $accessibleBoards;
+
+
+        // Add the user's role for each board to pass to the view
+        // This can be helpful for displaying role-specific UI elements on the dashboard cards
+        $boardsWithRoles = $boards->map(function ($board) use ($user) {
+            $board->currentUserRole = $user->getRoleForBoard($board); // Add a temporary attribute
+            return $board;
+        });
+
+        return view('user.dashboard', ['boards' => $boardsWithRoles]);
     }
 
     public function store(BoardRequest $request)

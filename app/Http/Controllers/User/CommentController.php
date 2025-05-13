@@ -11,8 +11,20 @@ use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
+    private function authorizeTaskAccess(Task $task, array $requiredPermissions = [])
+    {
+        $user = Auth::user();
+        $board = $task->column->board;
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
+        }
+        abort(403, 'Bạn không có quyền truy cập!');
+    }
 
     public function store(Request $request, Task $task) {
+        $this->authorizeTaskAccess($task,['board_viewer','board_editor','board_member_manager']);
         $request->validate(['content' => 'required|string']);
 
         try {
@@ -35,34 +47,9 @@ class CommentController extends Controller
         }
     }
 
-    // public function update(Request $request, Task $task, $commentId)
-    // {
-    //     $request->validate(['content' => 'required|string']);
-
-    //     try {
-    //         $comment = $task->comments()->findOrFail($commentId);
-
-    //         // Kiểm tra quyền sửa bình luận của người dùng
-    //         if ($comment->user_id !== Auth::id()) {
-    //             return response()->json(['success' => false, 'message' => 'Bạn không có quyền sửa bình luận này.'], 403);
-    //         }
-
-    //         // Cập nhật nội dung bình luận
-    //         $comment->update(['content' => $request->content]);
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Bình luận đã được sửa.',
-    //             'comment' => $comment
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         Log::error("Error updating comment for task {$task->id}: " . $e->getMessage());
-    //         return response()->json(['success' => false, 'message' => 'Không thể sửa bình luận.'], 500);
-    //     }
-    // }
-
     public function destroy(Task $task, $commentId)
     {
+        $this->authorizeTaskAccess($task,['board_member_manager']);
         try {
             $comment = $task->comments()->findOrFail($commentId);
 

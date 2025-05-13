@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Kanban App')</title>
 
     <!-- Fonts and Icons -->
@@ -61,18 +61,28 @@
     {{-- Scripts --}}
     <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-   
     <script src="{{ asset('assets/js/adminlte.js') }}"></script>
     <script>
         window.routeUrls = {
             boardsStore: @json(route('boards.store')),
             boardsUpdateBase: @json(route('boards.update', ['board' => ':boardIdPlaceholder'])),
             boardsDestroyBase: @json(route('boards.destroy', ['board' => ':boardIdPlaceholder'])),
-            tasksShowPageBase: @json(route('tasks.showDetailsPage', ['task' => ':taskIdPlaceholder'])) 
+            tasksShowPageBase: @json(route('tasks.showDetailsPage', ['task' => ':taskIdPlaceholder'])),
+
+            boardsSettings: @json(route('boards.settings', ['board' => ':boardIdPlaceholder'])),
+            boardsInvite: @json(route('boards.invite', ['board' => ':boardIdPlaceholder'])),
+            boardsMembersUpdateRole: @json(route('boards.members.updateRole', ['board' => ':boardIdPlaceholder', 'member' => ':memberIdPlaceholder'])),
+            boardsMembersRemove: @json(route('boards.members.remove', ['board' => ':boardIdPlaceholder', 'member' => ':memberIdPlaceholder'])),
+            boardsInvitationsCancel: @json(route('boards.invitations.cancel', ['board' => ':boardIdPlaceholder', 'invitation' => ':invitationIdPlaceholder'])),
+            invitationsAccept: @json(route('invitations.accept', ['token' => ':tokenPlaceholder'])),
         };
+        window.boardId = @json($board->id);
+        window.csrfToken = "{{ csrf_token() }}";
     </script>
     <script src="{{ asset('assets/js/user.js')}}"></script>
     <script src="{{ asset('plugins/jquery/jquery-ui.min.js')}}"></script>
+    <script src="{{ asset('assets/js/permission.js') }}"></script>
+
 
 </body>
 

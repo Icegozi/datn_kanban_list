@@ -15,20 +15,20 @@ class PermissionSeeder extends Seeder
     {
         DB::table('permissions')->insert([
             [
-                'name' => 'view',
+                'name' => 'board_viewer',
                 'description' => 'Quyền xem nội dung',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'edit',
+                'name' => 'board_editor',
                 'description' => 'Quyền chỉnh sửa nội dung',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'name' => 'create',
-                'description' => 'Quyền tạo mới nội dung',
+                'name' => 'board_member_manager',
+                'description' => 'Quyền mời và quản lý thành viên',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

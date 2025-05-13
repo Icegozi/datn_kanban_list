@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Board;
 use App\Models\Task;
 use App\Models\Attachment; // Đảm bảo import đúng Model
 use Exception;
@@ -14,8 +15,32 @@ use Illuminate\Support\Str;
 
 class AttachmentController extends Controller
 {
+    private function authorizeTaskAccess(Task $task, array $requiredPermissions = [])
+    {
+        $user = Auth::user();
+        $board = $task->column->board;
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
+        }
+        abort(403, 'Bạn không có quyền truy cập!');
+    }
+
+    private function authorizeBoardAccess(Board $board, array $requiredPermissions = [])
+    {
+        $user = Auth::user();
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
+        }
+
+        abort(403, 'Bạn không có quyền truy cập!');
+    }
     public function store(Request $request, Task $task)
     {
+        $this->authorizeTaskAccess($task,['board_editor','board_member_manager']);
         $request->validate([
             'attachments'   => 'required|array',
             'attachments.*' => 'file|max:10240', // max 10MB per file, ví dụ: mimes:jpg,png,pdf,doc,docx,xls,xlsx
@@ -110,11 +135,10 @@ class AttachmentController extends Controller
 
     public function index(Task $task)
     {
+        $this->authorizeTaskAccess($task,['board_viewer','board_editor','board_member_manager']);
         try {
             // Đảm bảo load đúng và sử dụng accessor nếu cần
             $attachments = $task->attachments()->latest()->get()->map(function ($attachment) {
-                // Các accessor sẽ tự động được thêm vào nếu có trong $appends của Model
-                // $attachment->url = $attachment->url; // Ví dụ, để đảm bảo accessor được gọi
                 return $attachment;
             });
 
@@ -133,20 +157,11 @@ class AttachmentController extends Controller
 
     public function destroy(Attachment $attachment)
     {
-        // Kiểm tra quyền sử dụng accessor can_delete
-        if (!$attachment->can_delete) { // Giả sử accessor này hoạt động đúng
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn không có quyền xoá đính kèm này.'
-            ], 403);
-        }
+        $task = $attachment->task;
+        $this->authorizeTaskAccess($task,['board_member_manager']);
 
         try {
             $originalName = $attachment->file_name;
-            $task = $attachment->task; // Lấy task trước khi attachment bị xóa
-
-            // Việc xóa file vật lý đã được xử lý trong Model event 'deleting'
-
             $attachment->delete();
 
             if ($task && $task->taskHistories()) { // Kiểm tra task và taskHistories
@@ -175,15 +190,13 @@ class AttachmentController extends Controller
 
      public function download(Attachment $attachment)
     {
+        $task = $attachment->task;
+        $this->authorizeTaskAccess($task,['board_viewer','board_editor','board_member_manager']);
         try {
             if (!Storage::disk('public')->exists($attachment->file_path)) {
                 Log::error("File not found for download: Attachment ID {$attachment->id}, Path: {$attachment->file_path}");
                 return response()->json(['success' => false, 'message' => 'Không tìm thấy tệp tin.'], 404);
             }
-
-            // Trả về response để trình duyệt tải file xuống
-            // Tham số thứ hai là tên file mà người dùng sẽ thấy khi tải về (nên dùng file_name gốc)
-            // Tham số thứ ba là mảng các headers (tùy chọn)
             return Storage::disk('public')->download($attachment->file_path, $attachment->file_name);
 
         } catch (Exception $e) {

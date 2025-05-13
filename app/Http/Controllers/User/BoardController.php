@@ -11,11 +11,17 @@ use Illuminate\Http\Request;
 
 class BoardController extends Controller
 {
-    private function authorizeBoardAccess(Board $board, $message)
+    private function authorizeBoardAccess(Board $board, array $requiredPermissions = [])
     {
-        if (Auth::id() !== $board->user_id) {
-            return response()->json(['success' => false, 'message' => $message], 403);
+        $user = Auth::user();
+        // Kiểm tra nếu người dùng có một trong các quyền yêu cầu
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
         }
+
+        abort(403, 'Bạn không có quyền truy cập!');
     }
 
     public function store(BoardRequest $request)
@@ -49,8 +55,7 @@ class BoardController extends Controller
 
     public function show(Board $board)
     {
-        $this->authorizeBoardAccess($board, "Không được phép xem bảng này");
-
+        $this->authorizeBoardAccess($board, ['board_viewer','board_editor', 'board_member_manager']);
         $board->load([
             'columns' => function ($query) {
                 $query->orderBy('position', 'asc');
@@ -69,7 +74,7 @@ class BoardController extends Controller
 
     public function update(BoardRequest $request, Board $board)
     {
-        $this->authorizeBoardAccess($board, "Không được phép cập nhật bảng này");
+        $this->authorizeBoardAccess($board, ['board_editor', 'board_member_manager']);
 
         $validated = $request->validated();
 
@@ -86,7 +91,7 @@ class BoardController extends Controller
 
     public function destroy(Board $board)
     {
-        self::authorizeBoardAccess($board, "Không được phép xóa bảng này");
+        $this->authorizeBoardAccess($board, ['board_member_manager']);
 
         $board->delete();
 

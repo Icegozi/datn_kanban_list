@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            UserSeeder::class,
-            BoardSeeder::class,
+            // UserSeeder::class,
+            // BoardSeeder::class,
             BoardPermissionSeeder::class,
         ]);        
     }

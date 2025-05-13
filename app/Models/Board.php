@@ -5,7 +5,9 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Board extends Model
 {
@@ -24,12 +26,16 @@ class Board extends Model
         return $this->hasMany(Column::class)->orderBy('position', 'asc');
     }
 
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     // Lấy tất cả board theo user_id
     public static function getBoardsByUser(int $userId)
     {
         return self::where('user_id', $userId)->get();
     }
-
 
     // Thêm board mới
     public static function createBoard(array $data)
@@ -68,5 +74,43 @@ class Board extends Model
     }
 
 
+    public function boardPermissionUsers(): HasManyThrough
+    {
+        // Board -> board_permissions -> permission_users
+        return $this->hasManyThrough(
+            PermissionUser::class, 
+            BoardPermission::class, 
+            'board_id',        
+            'id',                
+            'id',                
+            'permission_user_id'
+        );
+    }
 
+    public function getMembersWithRoles()
+    {
+        $members = [];
+        $permissionUserPivots = $this->boardPermissionUsers()->with('user', 'permission')->get();
+
+        foreach ($permissionUserPivots as $pivot) {
+            if ($pivot->user && $pivot->user->id !== $this->user_id) { 
+                if (!isset($members[$pivot->user->id])) {
+                    $members[$pivot->user->id] = [
+                        'user' => $pivot->user,
+                        'roles' => [], 
+                    ];
+                }
+                if ($pivot->permission) {
+                    $members[$pivot->user->id]['roles'][] = $pivot->permission->name;
+                }
+            }
+        }
+
+        return array_values($members);
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(BoardInvitation::class);
+    }
 }

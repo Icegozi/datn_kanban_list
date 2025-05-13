@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\BoardMembershipController;
 use App\Http\Controllers\User\ChecklistController;
 use App\Http\Controllers\User\ColumnController;
 use App\Http\Controllers\User\TaskController;
@@ -88,9 +89,17 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/checklists/{checklist}', [ChecklistController::class, 'destroy'])->name('checklists.destroy');
     Route::post('/tasks/{task}/checklists/reorder', [ChecklistController::class, 'reorder'])->name('checklists.reorder');
 
-    // ==== ROUTE ĐẶC BIỆT CHO ADMIN ====
-    Route::middleware('is_admin')->group(function () {
-        Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    // Board Membership and Invitations
+    Route::get('/boards/{board}/settings', [BoardMembershipController::class, 'settings'])->name('boards.settings');
+    Route::post('/boards/{board}/invite', [BoardMembershipController::class, 'inviteMember'])->name('boards.invite');
+    Route::post('/boards/{board}/members/{member}/update-role', [BoardMembershipController::class, 'updateMemberRole'])->name('boards.members.updateRole');
+    Route::delete('/boards/{board}/members/{member}/remove', [BoardMembershipController::class, 'removeMember'])->name('boards.members.remove');
+    Route::delete('/boards/{board}/invitations/{invitation}/cancel', [BoardMembershipController::class, 'cancelInvitation'])->name('boards.invitations.cancel');
+    Route::get('/invitations/accept/{token}', [App\Http\Controllers\User\BoardMembershipController::class, 'acceptInvitation'])
+        ->name('invitations.accept')
+        ->middleware('signed'); 
+        Route::middleware('is_admin')->group(function () {
+            Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
         // Các chức năng nâng cao khác dành riêng cho admin có thể đặt ở đây
     });

@@ -208,7 +208,7 @@
 <script>
 $(function() {
     const taskId = "{{ $task->id }}";
-    const originalDescription = {!! json_encode($task->description) !!}; // Dùng cho nút Hủy của Mô tả
+    const originalDescription = {!! json_encode($task->description) !!}; 
     const originalTitle = {!! json_encode($task->title) !!};
 
     // Helper function cho escape HTML (nếu chưa có global)

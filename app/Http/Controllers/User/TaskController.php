@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskRequest;
 use App\Http\Requests\UpdateTaskPositionRequest;
+use App\Models\Board;
 use App\Models\Column;
 use App\Models\Task;
 use App\Models\TaskHistory;
@@ -17,21 +18,34 @@ use Log;
 
 class TaskController extends Controller
 {
-    private function authorizeTaskAccess(Task $task)
+    private function authorizeTaskAccess(Task $task, array $requiredPermissions = [])
     {
+        $user = Auth::user();
         $board = $task->column->board;
-        if ($board->user_id !== Auth::id()) {
-            abort(403, 'Bạn không có quyền truy cập!');
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
         }
-        return $board;
+        abort(403, 'Bạn không có quyền truy cập!');
     }
 
+    private function authorizeBoardAccess(Board $board, array $requiredPermissions = [])
+    {
+        $user = Auth::user();
+        // Kiểm tra nếu người dùng có một trong các quyền yêu cầu
+        foreach ($requiredPermissions as $permission) {
+            if ($user->hasBoardPermission($board, $permission)) {
+                return $board;
+            }
+        }
+
+        abort(403, 'Bạn không có quyền truy cập!');
+    }
     public function store(TaskRequest $request, Column $column)
     {
         $board = $column->board;
-        if ($board->user_id !== Auth::id()) {
-            return response()->json(['success' => false, 'message' => 'Bạn không có quyền truy cập bảng này!'], 403);
-        }
+        $this->authorizeBoardAccess($board,['board_editor','board_member_manager']);
 
         try {
             $taskInstance = new Task();
@@ -68,7 +82,7 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-        $this->authorizeTaskAccess($task);
+        $this->authorizeTaskAccess($task,['board_viewer','board_editor','board_member_manager']);
         $task->loadDetails();
 
         if ($task->column) {
@@ -147,7 +161,7 @@ class TaskController extends Controller
      */
     public function update(TaskRequest $request, Task $task)
     {
-        $this->authorizeTaskAccess($task);
+        $this->authorizeTaskAccess($task,['board_member_manager','board_editor']);
 
         try {
             $task->updateDetails($request->validated());
@@ -185,7 +199,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        $this->authorizeTaskAccess($task);
+        $this->authorizeTaskAccess($task,['board_member_manager']);
 
         try {
             $task->deleteWithHistory();
@@ -204,7 +218,7 @@ class TaskController extends Controller
     public function updatePosition(UpdateTaskPositionRequest $request)
     {
         $task = Task::findOrFail($request->task_id);
-        $board = $this->authorizeTaskAccess($task);
+        $board = $this->authorizeTaskAccess($task,['board_editor','board_member_manager']);
         $taskHistory = new TaskHistory();
         $oldColumn = Column::find($task->column_id);
         $newColumn = Column::findOrFail($request->new_column_id);
@@ -240,46 +254,4 @@ class TaskController extends Controller
             return response()->json(['success' => false, 'message' => 'Không thể cập nhật vị trí nhiệm vụ.'], 500);
         }
     }
-
-
-    //     public function showDetailsPage(Task $task)
-    //     {
-    //         $this->authorizeTaskAccess($task);
-
-    //         $task->load([
-    //             'column.board',
-    //             'assignees',
-    //             'comments.user',
-    //             'taskHistories.user',
-    //         ]);
-
-    //         $boardForLayout = $task->column->board;
-
-    //         if ($task->due_date) {
-    //             $task->formatted_due_date = $task->due_date->format('d M, Y');
-    //         }
-    //         if ($task->created_at) {
-    //             $task->formatted_created_at = $task->created_at->format('d M, Y \lúc H:i');
-    //         }
-
-    //         if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
-    //             $task->task_histories->each(function ($history) {
-    //                 $history->user_name = $history->user ? $history->user->name : 'N/A';
-    //                 $history->time_ago = $history->created_at ? $history->created_at->diffForHumans() : 'N/A';
-    //             });
-    //         } else {
-    //             $task->task_histories = collect([]);
-    //         }
-
-    //         if ($task->comments instanceof \Illuminate\Database\Eloquent\Collection) {
-    //             $task->comments->each(function ($comment) {
-    //                 $comment->user_name = $comment->user ? $comment->user->name : 'N/A';
-    //                 $comment->time_ago = $comment->created_at ? $comment->created_at->diffForHumans() : 'N/A';
-    //             });
-    //         } else {
-    //             $task->comments = collect([]);
-    //         }
-
-    //         return view('user.tasks.show_details', ['task' => $task, 'board' => $boardForLayout]);
-    //     }
 }

@@ -68,6 +68,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'is_admin' => \App\Http\Middleware\IsAdmin::class,
         'is_user' => \App\Http\Middleware\IsUser::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
     ];
-    
 }
