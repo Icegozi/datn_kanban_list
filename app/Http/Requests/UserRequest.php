@@ -21,18 +21,20 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->route('id'); 
+
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:users,email,' . $userId, 
             'password' => [
-                'required',
+                'nullable', 
                 'string',
                 'min:8',
-                'regex:/[a-z]/',      // ít nhất một chữ thường
-                'regex:/[A-Z]/',      // ít nhất một chữ hoa
-                'regex:/[0-9]/',      // ít nhất một chữ số (nếu bạn muốn)
-                'regex:/[@$!%*#?&]/', // ít nhất một ký tự đặc biệt
-                'confirmed'           // phải khớp với password_confirmation
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*#?&]/',
+                'confirmed'
             ],
             'status' => 'required|in:active,inactive,banned',
             'is_admin' => 'nullable|boolean',

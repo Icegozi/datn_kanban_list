@@ -4,6 +4,7 @@
 
 @section('content')
     <h3>Cập nhật tài khoản</h3>
+
     <div id="user-edit-container">
         <form id="editUserForm" method="POST" action="{{ route('admin.user.update', $user->id) }}">
             @csrf
@@ -55,9 +56,10 @@
                         <th scope="row">Trạng thái</th>
                         <td>
                             <select class="form-control" id="userStatus" name="status">
-                                <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Kích hoạt 
+                                <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Kích hoạt
                                 </option>
-                                <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Không kích hoạt</option>
+                                <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Không kích hoạt
+                                </option>
                                 <option value="banned" {{ $user->status == 'banned' ? 'selected' : '' }}>Bị khóa</option>
                                 </option>
                             </select>
@@ -68,7 +70,8 @@
                         <th scope="row">Là quản trị viên</th>
                         <td>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="isAdmin" name="is_admin" value="1" {{ $user->is_admin ? 'checked' : '' }}>
+                                <input type="checkbox" class="form-check-input" id="isAdmin" name="is_admin"
+                                    value="1" {{ $user->is_admin ? 'checked' : '' }}>
                                 <label class="form-check-label" for="isAdmin">Là quản trị viên (Is Admin)</label>
                             </div>
                         </td>
@@ -99,3 +102,26 @@
         </form>
     </div>
 @endsection
+
+@if ($errors->any())
+    <script>
+        let errorMessages = "";
+        @foreach ($errors->all() as $error)
+            errorMessages += "{{ $error }}\n";
+        @endforeach
+
+        alert(errorMessages);
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        alert("{{ session('error') }}");
+    </script>
+@endif
+
+@if (session('success'))
+    <script>
+        alert("{{ session('success') }}");
+    </script>
+@endif

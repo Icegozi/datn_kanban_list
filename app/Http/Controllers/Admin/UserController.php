@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::paginate(10);
+        $users = User::paginate(20);
         return view('admin.account.index', compact('users'));
     }
 
@@ -44,21 +44,19 @@ class UserController extends Controller
         return view('admin.account.show', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
         $ok = User::updateUserById($id, $request->all());
 
         if ($ok) {
-            return Response::json([
-                'success' => true,
-                'message' => 'Cập nhật thành công',
-            ]);
+            return redirect()
+                ->route('admin.user.index') 
+                ->with('success', 'Cập nhật người dùng thành công!');
         }
 
-        return Response::json([
-            'success' => false,
-            'message' => 'Không tìm thấy người dùng',
-        ], 404);
+        return redirect()
+            ->back()               
+            ->withErrors(['error' => 'Không tìm thấy người dùng hoặc cập nhật thất bại']);
     }
 
     public function destroy($id)
@@ -87,5 +85,4 @@ class UserController extends Controller
             'users' => $users,
         ]);
     }
-
 }
