@@ -5,7 +5,7 @@
 <!-- Flatpickr CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <!-- Flatpickr locale tiếng Việt -->
-<script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+
 <style>
     #userRegistrationChartContainer {
         position: relative;
@@ -33,9 +33,9 @@
     </div>
 @endsection
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

@@ -9,10 +9,11 @@
                     </p>
                 </div>
                 <div class="col-sm-7">
-                    <div class="footer-social">
+                    <div class="footer-social-admin">
                         <span><i class="fa fa-envelope"></i> support@myapp.com</span>
                         <a href="#"><i class="fab fa-twitter"></i></a>
                         <a href="#"><i class="fab fa-linkedin"></i></a>
+
                     </div>
                 </div>
             </div>

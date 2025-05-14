@@ -70,11 +70,28 @@ var TaskJS = (function ($) {
             // Lưu thêm các trường khác nếu cần so sánh
         };
         console.log(taskData);
+        let columnColor = 'black'; // mặc định
+
+        switch (taskData.column_name) {
+            case 'Đang làm':
+                columnColor = 'orange';
+                break;
+            case 'Hoàn thành':
+                columnColor = 'green';
+                break;
+            case 'Việc cần làm':
+                columnColor = 'red';
+                break;
+            default:
+                columnColor = 'gray';
+        }
 
         $('#modalTaskId').val(taskData.id);
         $('#modalTaskTitleHeader').text(taskData.title);
         $('#modalTaskTitleInput').val(taskData.title);
-        $('#modalTaskColumnName').text(taskData.column_name || 'Không xác định');
+        $('#modalTaskColumnName')
+            .text(taskData.column_name || 'Không xác định')
+            .css('color', columnColor);
 
         // Xử lý Mô tả
         const $descDisplay = $('#modalTaskDescriptionContainer .description-box-display');

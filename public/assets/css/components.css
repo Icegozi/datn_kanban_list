@@ -64,60 +64,77 @@ a.navbar-brand:focus {
 --------------------------------------*/
 /* Footer chỉnh sửa */
 .footer {
-    background-color: #0f0b0b;
-    /* nền sáng */
-    padding: 30px 0 10px 0;
-    border-top: 1px solid #e1e5eb;
-    /* viền trên nhẹ */
-    color: #6c757d;
-    /* màu chữ trung tính */
+    background-color: #1c1c1c;
+    color: #dee2e6;
+    padding: 20px 0;
     font-size: 14px;
-
+    line-height: 1.6;
 }
 
-.hm-footer-copyright p,
-.hm-footer-copyright p a {
-    margin: 0;
-    color: #6c757d;
-    font-weight: 400;
-    text-transform: capitalize;
-}
-
-.footer-social {
-    text-align: right;
-}
-
-.footer-social a,
-.footer-social span {
-    display: inline-block;
-    color: #6c757d;
-    font-size: 14px;
-    margin-left: 15px;
-    transition: all 0.3s ease;
-}
-
-.footer-social a {
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
-    background: #dee2e6;
-    /* nền xám sáng hơn */
-    text-align: center;
-    border-radius: 50%;
-}
-
-.footer-social a:hover {
-    background: #ff545a;
-    /* hover nền đỏ */
-    color: #fff;
-    /* hover chữ trắng */
-}
-
-.footer-social span:hover {
-    color: #ff545a;
-    /* hover đổi màu email */
-}
-
+/* Container giới hạn chiều rộng */
 .footer .container {
     max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Copyright */
+.hm-footer-copyright {
+    border-top: 1px solid #333;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+/* Bên trái: thông tin bản quyền */
+.hm-footer-copyright p {
+    margin: 0;
+    color: #adb5bd;
+}
+
+/* Bên phải: social & email */
+.footer-social {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Email */
+.footer-social span {
+    color: #adb5bd;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.footer-social span i {
+    margin-right: 6px;
+}
+
+/* Hover màu cho email */
+.footer-social span:hover {
+    color: #ff545a;
+}
+
+/* Icon mạng xã hội */
+.footer-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background-color: #dee2e6;
+    color: #6c757d;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover icon */
+.footer-social a:hover {
+    background-color: #ff545a;
+    color: #fff;
 }

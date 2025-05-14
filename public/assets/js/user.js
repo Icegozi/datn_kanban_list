@@ -293,7 +293,6 @@ $(document).ready(function () {
                 $("#cardOverlay").html(`
                         <div class="overlay-content" id="ovl_content">
                             <p>🎉 Cừu đã chui vào thẻ thành công!</p>
-                            <button class="btn btn-primary overlay-close-btn">Đóng</button> 
                         </div>
                     `);
             } else if ($("#cardOverlay .overlay-content").length === 0) {
@@ -301,7 +300,6 @@ $(document).ready(function () {
                 $("#cardOverlay").html(`
                         <div class="overlay-content" id="ovl_content">
                             <p>🎉 Cừu đã chui vào thẻ thành công!</p>
-                            <button class="btn btn-primary overlay-close-btn">Đóng</button>
                         </div>
                     `);
             }
@@ -315,7 +313,7 @@ $(document).ready(function () {
         }
 
         // Use event delegation for the close button in case overlay is created dynamically
-        $(document).on("click", "#cardOverlay .overlay-close-btn", function () {
+        $(document).on("click", "#cardOverlay", function () {
             $("#cardOverlay").fadeOut(function () {
                 $sheepWrapper.css({
                     top: originalPosition.top,

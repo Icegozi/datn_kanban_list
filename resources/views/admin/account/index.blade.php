@@ -5,7 +5,6 @@
 @section('content')
     <div class="container">
         <h3 class="mb-4">Danh sách người dùng</h3>
-
         <table class="table table-bordered table-hover">
             <thead class="thead-dark">
                 <tr class="text-center">
@@ -62,8 +61,8 @@
         </table>
 
         {{-- Hiển thị phân trang --}}
-        <div class="d-flex justify-content-center">
-            {{ $users->links() }}
+        <div class="d-flex justify-content-end mt-4">
+            {{ $users->links('pagination::bootstrap-4') }}
         </div>
     </div>
 @endsection

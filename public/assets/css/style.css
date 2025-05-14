@@ -1300,52 +1300,6 @@ nav.navbar.bootsnav .navbar-toggle i {
     text-transform: capitalize;
 }
 
-.footer-social {
-    text-align: right;
-}
-
-.footer-social .fa-phone:before {
-    position: relative;
-    top: 2px;
-}
-
-.footer-social a,
-.footer-social span {
-    display: inline-block;
-    color: #afb4bf;
-    font-size: 14px;
-    margin-left: 15px;
-    -webkit-transition: .3s;
-    -moz-transition: .3s;
-    -ms-transition: .3s;
-    -o-transition: .3s;
-    transition: .3s;
-}
-
-.footer-social a {
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
-    background: #eef2f6;
-    text-align: center;
-    border-radius: 50%;
-}
-
-.footer-social span {
-    margin-right: 15px;
-    margin-left: 0;
-    color: #a5adb3;
-}
-
-.footer-social span:hover {
-    color: #ff545a;
-}
-
-.footer-social a:hover {
-    background: #ff545a;
-    color: #fff;
-}
-
 /*===============================
     Scroll Top
 ===============================*/

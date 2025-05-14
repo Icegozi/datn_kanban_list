@@ -2,15 +2,14 @@
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                <a class="nav-link" href="{{ route('user.dashboard') }}"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a  href="{{ route('admin.dashboard') }}"  class="nav-link">Thống kê</a>
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">Thống kê</a>
         </li>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle"
-                href="#" id="userManagementDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="userManagementDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Quản lý tài khoản
             </a>
             <div class="dropdown-menu" aria-labelledby="userManagementDropdown">
@@ -21,21 +20,24 @@
 
     </ul>
 
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-item mt-2">
-            {{ Auth::user()->name }}
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" onclick="confirmLogout(event)">
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
-        </li>
-        <!-- Form ẩn -->
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
-    </ul>
+   <!-- Right navbar links -->
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item d-flex align-items-center">
+        <span class="nav-link">{{ Auth::user()->name }}</span>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" href="#" onclick="confirmLogout(event)">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+    </li>
+</ul>
+
+<!-- Form ẩn - Đặt ngoài UL -->
+<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+    @csrf
+</form>
+
+
 </nav>
 
 <script>
