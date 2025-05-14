@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -114,13 +115,26 @@ class Board extends Model
         return array_values($members);
     }
 
-    public function assignedUsers()
+    // public function assignedUsers()
+    // {
+    //     return User::whereIn('id', function ($query) {
+    //         $query->select('permission_users.user_id')
+    //             ->from('permission_users')
+    //             ->join('board_permissions', 'permission_users.id', '=', 'board_permissions.permission_user_id')
+    //             ->where('board_permissions.board_id', $this->id);
+    //     })->get();
+    // }
+
+    public function assignedUsers(Board $board)
     {
-        return User::whereIn('id', function ($query) {
-            $query->select('permission_users.user_id')
-                ->from('permission_users')
-                ->join('board_permissions', 'permission_users.id', '=', 'board_permissions.permission_user_id')
-                ->where('board_permissions.board_id', $this->id);
-        })->get();
+        $permissionUserIds = DB::table('permission_users')
+            ->join('board_permissions', 'permission_users.id', '=', 'board_permissions.permission_user_id')
+            ->where('board_permissions.board_id', $board->id)
+            ->pluck('permission_users.user_id')
+            ->toArray();
+        $permissionUserIds[] = $board->user_id;
+        $userIds = array_unique($permissionUserIds);
+        return User::whereIn('id', $userIds)->get();
     }
+
 }

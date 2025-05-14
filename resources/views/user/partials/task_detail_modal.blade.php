@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header bg-secondary text-light">
-                <h5 class="modal-title" id="modalTaskTitleHeader" >Chi tiết công việc</h5>
+                <h5 class="modal-title" id="modalTaskTitleHeader">Chi tiết công việc</h5>
                 <input type="hidden" id="modalTaskId">
                 <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -107,7 +107,7 @@
                                 </div>
 
 
-                                <div id="modalDisplayComment" style="max-height: 300px; overflow-y: auto;">
+                                <div id="modalDisplayComment" style="min-height: 300px; overflow-y: auto; height:100%">
 
                                 </div>
                             </div>
@@ -161,6 +161,9 @@
                                     style="min-height: 300px; overflow-y: auto; margin-top:20px; height:100%">
                                     <p class="text-muted small">Lịch sử hoạt động sẽ hiển thị ở đây.</p>
                                 </div>
+                                <button id="loadMoreActivity" class="btn btn-link">
+                                    <i class="fas fa-angle-down mr-1"></i> Xem thêm
+                                </button>
                             </div>
 
                         </div>

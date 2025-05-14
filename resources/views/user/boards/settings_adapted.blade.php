@@ -20,8 +20,8 @@
                 {{-- Invite Members Form --}}
                 @if(Auth::user()->id == $board->user_id || Auth::user()->hasBoardPermission($board, 'board_member_manager'))
                     <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-user-plus mr-2"></i>Mời thành viên
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-secondary">
+                            <h6 class="m-0 font-weight-bold text-white "><i class="fas fa-user-plus mr-2"></i>Mời thành viên
                                 mới</h6>
                         </div>
                         <div class="card-body">
@@ -57,7 +57,7 @@
                                     @error('role_permission_name') <div class="invalid-feedback small">{{ $message }}</div>
                                     @enderror
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-sm btn-block">
+                                <button type="submit" class="btn btn-outline-dark btn-sm btn-block">
                                     <i class="fas fa-paper-plane mr-1"></i> Gửi lời mời
                                 </button>
                             </form>
@@ -68,8 +68,8 @@
                 {{-- Pending Invitations --}}
                 @if(Auth::user()->id == $board->user_id || Auth::user()->hasBoardPermission($board, 'board_member_manager'))
                     <div class="card shadow">
-                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold text-primary">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-secondary">
+                            <h6 class="m-0 font-weight-bold text-white">
                                 <i class="fas fa-hourglass-half mr-2"></i>Lời mời đang chờ
                                 (@if($pendingInvitations) <span
                                     class="badge badge-warning badge-pill">{{ $pendingInvitations->count() }}</span> @else 0
@@ -117,8 +117,8 @@
             {{-- Right Column: Current Members --}}
             <div class="col-lg-7">
                 <div class="card shadow">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-users mr-2"></i>Thành viên hiện tại
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-secondary">
+                        <h6 class="m-0 font-weight-bold text-white"><i class="fas fa-users mr-2"></i>Thành viên hiện tại
                         </h6>
                     </div>
                     <div class="card-body">

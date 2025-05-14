@@ -47,12 +47,10 @@ class AssigneeController extends Controller
         $this->authorizeTaskAccess($task, ['board_member_manager']);
         $assignee = new Assignee();
 
-        if (!$assignee->isExistsAsignee($user->id, $task->id)) {
-            return $this->response(false, 'Người dùng không được giao nhiệm vụ này.', $task, 404);
-        }
+        // if (!$assignee->isExistsAsignee($user->id, $task->id)) {
+        //     return $this->response(false, 'Người dùng không được giao nhiệm vụ này.', $task, 404);
+        // }
 
-        // Cập nhật assignee (user) cho task
-        // Giả sử bạn muốn thay đổi user_id của assignee cho task
         $updatedAssignee = $assignee->updateUserForTask($task->id,$user->id);
         if (!$updatedAssignee) {
             return $this->response(false, 'Cập nhật người phụ trách không thành công.', $task, 500);
@@ -113,7 +111,7 @@ class AssigneeController extends Controller
 
     public function assignedUsers(Board $board)
     {
-        $users = $board->assignedUsers()->map(function ($user) {
+        $users = $board->assignedUsers($board)->map(function ($user) {
             return [
                 'id' => $user->id,
                 'name' => $user->name,

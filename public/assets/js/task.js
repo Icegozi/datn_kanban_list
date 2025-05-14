@@ -98,7 +98,7 @@ var TaskJS = (function ($) {
             taskData.assignees.forEach(assignee => {
                 const assigneeName = assignee.name || 'Không rõ tên';
                 const assigneeAvatar = assignee.avatar_url || 'https://i.pravatar.cc/30?u=' + encodeURIComponent(assignee.email || `unknown_${Date.now()}`);
-                
+
                 $assigneesContainer.append(`
             <img src="${assigneeAvatar}"
                  class="rounded-circle border border-white mr-n2" 
@@ -112,7 +112,7 @@ var TaskJS = (function ($) {
             $assigneesContainer.html('<span class="text-muted small">Chưa có ai tham gia.</span>');
         }
 
-         if (typeof AssigneeManager !== 'undefined' && AssigneeManager.setInitialTaskData) {
+        if (typeof AssigneeManager !== 'undefined' && AssigneeManager.setInitialTaskData) {
             AssigneeManager.setInitialTaskData(taskData.id, taskData.assignees);
         }
         // Xử lý Ngày hết hạn
@@ -123,38 +123,75 @@ var TaskJS = (function ($) {
             $('#modalDueDateBadge').removeClass('badge-info badge-warning badge-danger').addClass('badge-light');
         }
 
-        // Xử lý Hoạt động và Bình luận
+        // Xử lý Hoạt động 
         const $activityLog = $('#modalTaskActivityLog');
-        const $commentLog = $('#modalDisplayComment');
-        $activityLog.empty(); 
-        $commentLog.empty();  
+        const $loadMoreBtn = $('#loadMoreActivity');
+        let currentPage = 0;
+        const perPage = 5;
+        let sortedHistories = [];
+        $activityLog.empty();
 
-        let hasActivityInLog = false; 
+        function renderActivityLogPage(page) {
+            const start = page * perPage;
+            const end = start + perPage;
+            const pageData = sortedHistories.slice(start, end);
+
+            pageData.forEach(history => {
+                const formatHistoryCreatedAt = history.created_at
+                    ? dayjs(history.created_at).format("DD/MM/YYYY HH:mm")
+                    : "Không xác định";
+
+                $activityLog.append(`
+            <div class="activity-item mb-2 pb-2 border-bottom">
+                <div class="d-flex align-items-start">
+                    <img src="${history.user_avatar || 'https://i.pravatar.cc/150?img=3'}"
+                         class="rounded-circle mr-2"
+                         width="32"
+                         height="32"
+                         alt="${history.user_name}">
+                    <div>
+                        <p class="mb-0">
+                            <span class="font-weight-bold">${history.user_name || 'Hệ thống'}</span>
+                            ${history.note || ''}
+                        </p>
+                        <small class="text-muted">${formatHistoryCreatedAt}</small>
+                    </div>
+                </div>
+            </div>
+        `);
+            });
+
+            if (end >= sortedHistories.length || pageData.length < perPage) {
+                $loadMoreBtn.hide();
+            }
+        }
 
         if (taskData.task_histories && taskData.task_histories.length > 0) {
-            hasActivityInLog = true;
-            taskData.task_histories.forEach(history => {
-                const formatHistoryCreatedAt = history.created_at ? dayjs(history.created_at).format("DD/MM/YYYY HH:mm") : "";
-                $activityLog.append(`
-                    <div class="activity-item mb-2 pb-2 border-bottom">
-                        <div class="d-flex align-items-start">
-                            <img src="${history.user_avatar || 'https://i.pravatar.cc/150?img=3'}" class="rounded-circle mr-2" width="32" height="32" alt="${history.user_name}">
-                            <div>
-                                <p class="mb-0"><span class="font-weight-bold">${history.user_name || 'Hệ thống'}</span> ${history.note || ''}</p>
-                                <small class="text-muted">${formatHistoryCreatedAt}</small>
-                            </div>
-                        </div>
-                    </div>
-                `);
-            });
+            currentPage = 0;
+            sortedHistories = taskData.task_histories.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            $activityLog.empty();
+            renderActivityLogPage(currentPage);
+            if (sortedHistories.length > perPage) {
+                $loadMoreBtn.show();
+            } else {
+                $loadMoreBtn.hide();
+            }
+        } else {
+            $activityLog.html('<p class="text-muted small">Chưa có hoạt động nào.</p>');
+            $loadMoreBtn.hide();
         }
 
-        if (!hasActivityInLog) {
-            $activityLog.html('<p class="text-muted small">Chưa có hoạt động nào.</p>');
-        }
+
+        $loadMoreBtn.on('click', function () {
+            currentPage++;
+            renderActivityLogPage(currentPage);
+        });
+
 
         // Riêng cho comments, kiểm tra nếu không có comment thì hiển thị thông báo trong #modalDisplayComment
+        const $commentLog = $('#modalDisplayComment');
         let hasComments = false;
+        $commentLog.empty();
         if (taskData.comments && taskData.comments.length > 0) {
             hasComments = true;
             taskData.comments.forEach(comment => {
@@ -177,7 +214,7 @@ var TaskJS = (function ($) {
                 `);
             });
         }
-        if (!hasComments && $commentLog.is(':empty')) { 
+        if (!hasComments && $commentLog.is(':empty')) {
             $commentLog.html('<p class="text-muted small text-center mt-2">Chưa có bình luận nào.</p>');
         }
 
