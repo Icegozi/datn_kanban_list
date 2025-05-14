@@ -198,4 +198,53 @@ class User extends Authenticatable
 
         return $owned->merge($memberOf)->unique('id');
     }
+
+    public static function addUser(array $data): ?User
+    {
+        return self::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'is_admin' => $data['is_admin'] ?? false,
+            'status' => $data['status'] ?? 'active',
+        ]);
+    }
+
+    public static function updateUserById(int $id, array $data): bool
+    {
+        $user = self::find($id);
+        if (!$user) {
+            return false;
+        }
+
+        if (!empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']); 
+        }
+
+        return $user->update($data);
+    }
+
+
+    public static function deleteUserById(int $id): bool
+    {
+         if (auth()->id() === $id) {
+            return false; 
+        }
+        $user = self::find($id);
+        if (!$user) {
+            return false;
+        }
+
+        return $user->delete();
+    }
+
+    public static function searchUsers(string $keyword)
+    {
+        return self::where('name', 'like', "%{$keyword}%")
+            ->orWhere('email', 'like', "%{$keyword}%")
+            ->get();
+    }
+
 }

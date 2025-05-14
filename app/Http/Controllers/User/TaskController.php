@@ -101,6 +101,10 @@ class TaskController extends Controller
         $task->formatted_due_date = $task->due_date ? $task->due_date->format('d/m/Y') : null;
 
         if ($task->task_histories instanceof \Illuminate\Database\Eloquent\Collection) {
+            $task->task_histories = $task->task_histories()
+                ->orderByDesc('created_at') 
+                ->limit(100)  
+                ->get();  
             $task->task_histories->transform(function ($history) {
                 $user = $history->user;
 

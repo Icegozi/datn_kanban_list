@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\BoardMembershipController;
 use App\Http\Controllers\User\ChecklistController;
 use App\Http\Controllers\User\ColumnController;
@@ -108,6 +109,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware('is_admin')->group(function () {
         Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-        // Các chức năng danh cho admin
+        Route::get('/admin/dashboard/user-registrations', [AdminDashboardController::class, 'getUserRegistrations'])->name('admin.dashboard.user-registrations');
+
+        Route::prefix('users')->group(function () {
+            Route::get('admin/management/user', [UserController::class, 'index'])->name('admin.user.index');   
+            Route::get('admin/management/user/sidebar', [UserController::class, 'getUserList'])->name('admin.user.sidebar');
+            Route::get('admin/management/user/create', [UserController::class, 'create'])->name('admin.user.create');
+            Route::post('admin/management/user/store', [UserController::class, 'store'])->name('admin.user.store'); 
+            Route::get('admin/management/user/{id}', [UserController::class, 'show'])->name('admin.user.show');     
+            Route::put('admin/management/user/{id}/update', [UserController::class, 'update'])->name('admin.user.update'); 
+            Route::delete('admin/management/user/{id}/delete', [UserController::class, 'destroy'])->name('admin.user.destroy');
+        });
     });
 });
