@@ -4,8 +4,8 @@
 
 @section('content')
 {{-- Board Header (Optional: Add board rename/delete controls here later) --}}
-<div class="board-header p-3 mb-3 border-bottom">
-    <h1>{{ $board->name }}</h1>
+<div class="board-header p-3 mb-2 ml-2 border-bottom">
+    <h3>{{ $board->name }}</h3>
     {{-- Add board description if available: <p class="text-muted">{{ $board->description }}</p> --}}
 </div>
 
@@ -30,7 +30,7 @@
                 {{-- Loop through tasks for this column (Load tasks here or via AJAX) --}}
                 @foreach($column->tasks as $task)
                     <div class="kanban-card" data-task-id="{{ $task->id }}">
-                        <h5>{{ $task->title }}</h5>
+                        <h6>{{ $task->title }}</h6>
                          @if($task->due_date)
                             <small class="task-due-date text-warning d-block mt-1">
                                 <i class="far fa-clock"></i>
@@ -45,7 +45,7 @@
                 @endforeach
                  {{-- Placeholder or Input for Adding New Card --}}
                  {{-- We'll add the 'Add Card' JS logic later --}}
-                 <div class="add-card-placeholder mt-auto">
+                 <div class="add-card-placeholder mt-2">
                      <i class="fas fa-plus"></i>
                      <div>Thêm công việc</div>
                  </div>
@@ -58,7 +58,7 @@
     {{-- Placeholder/Button to Add New Column --}}
     <div class="kanban-column add-column-trigger" style="flex: 0 0 300px; background: transparent; box-shadow: none; padding: 0;">
          <div class="add-column-placeholder h-10" id="addColumnBtn">
-            <i class="fas fa-plus"></i>
+            THÊM CỘT
 
         </div>
          {{-- Hidden Input Form for New Column --}}

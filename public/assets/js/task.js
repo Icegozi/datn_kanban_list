@@ -231,10 +231,6 @@ var TaskJS = (function ($) {
                 `);
             });
         }
-        if (!hasComments && $commentLog.is(':empty')) {
-            $commentLog.html('<p class="text-muted small text-center mt-2">Chưa có bình luận nào.</p>');
-        }
-
 
         // === Xử lý Đính kèm (Attachments) ===
         if (typeof AttachmentManager !== 'undefined' && AttachmentManager.loadAttachments) {
