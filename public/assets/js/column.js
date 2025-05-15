@@ -173,7 +173,7 @@ $(function () {
                             </div>
                         </div>
                         <div class="column-content flex-grow-1" data-column-id="${response.column.id}">
-                            <div class="add-card-placeholder mt-auto">
+                            <div class="add-card-placeholder mt-2">
                                 <i class="fas fa-plus"></i>
                                 <div>Thêm công việc</div>
                             </div>
