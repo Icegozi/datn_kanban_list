@@ -33,14 +33,10 @@
     </div>
 @endsection
 
-{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> --}}
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         if (typeof Chart === 'undefined') {
-            console.error("Chart.js chưa được load!");
+            // console.error("Chart.js chưa được load!");
             return;
         }
 
@@ -108,20 +104,20 @@
                 })
                 .catch(error => {
                     chartCanvas.style.display = 'none';
-                    console.error("Lỗi khi lấy dữ liệu biểu đồ:", error);
-                    alert("Lỗi khi tải dữ liệu biểu đồ. Kiểm tra console.");
+                    // console.error("Lỗi khi lấy dữ liệu biểu đồ:", error);
+                    // alert("Lỗi khi tải dữ liệu biểu đồ. Kiểm tra console.");
                 });
         }
 
         const today = new Date();
-        const thirtyDaysAgo = new Date(new Date().setDate(today.getDate() - 29));
+        const thirtyDaysAgo = new Date(new Date().setDate(today.getDate() - 30));
 
         flatpickr(dateRangeInput, {
             mode: "range",
             dateFormat: "Y-m-d",
             defaultDate: [thirtyDaysAgo, today],
             maxDate: "today",
-            locale: "vn",
+            locale: "vi",
             onReady: (selectedDates, dateStr) => {
                 if (dateStr) fetchChartData(dateStr);
                 else chartCanvas.style.display = 'none';
