@@ -46,7 +46,7 @@ $(function () {
                 // --- Giữ thẻ "Thêm công việc" ở cuối ---
                 const column = ui.item.closest('.column-content');
                 const addCard = column.find('.add-card-placeholder');
-                column.append(addCard); // đảm bảo luôn nằm cuối
+                column.append(addCard); 
 
                 // --- Gửi dữ liệu mới về server ---
                 let taskId = ui.item.data(' task-id');
@@ -55,9 +55,6 @@ $(function () {
                     return $(this).data('task-id');
                 }).get();
 
-    
-
-                // $.ajax({ url: '...', method: 'POST', data: { taskId, newColumnId, order: taskOrder } });
             }
         }).disableSelection();
     }
@@ -82,7 +79,7 @@ $(function () {
             stop: function (event, ui) {
                 updateColumnOrder();
             }
-        }).disableSelection(); // Ngăn chọn text khi kéo
+        }).disableSelection(); 
     }
 
     // --- HÀM CẬP NHẬT THỨ TỰ CỘT ---
@@ -296,7 +293,7 @@ $(function () {
 
         const url = getRoute('columnsDestroyBase', { boardId: boardId, columnId: columnId });
 
-        $button.prop('disabled', true); // Disable button during request
+        $button.prop('disabled', true); 
 
         $.ajax({
             url: url,
@@ -306,22 +303,19 @@ $(function () {
                     showNotification(response.message);
                     $column.fadeOut(300, function () {
                         $(this).remove();
-                        // No need to call updateColumnOrder here as positions are adjusted server-side
-                        $("#kanbanBoard").sortable("refresh"); // Refresh sortable state
+                        $("#kanbanBoard").sortable("refresh");
                     });
                 } else {
                     showNotification(response.message || 'Failed to delete column.', 'error');
-                    $button.prop('disabled', false); // Re-enable on failure
+                    $button.prop('disabled', false); 
                 }
             },
             error: function (jqXHR) {
                 showNotification('Error deleting column: ' + (jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
-                $button.prop('disabled', false); // Re-enable on error
+                $button.prop('disabled', false); 
             }
         });
     });
-
-
 
     // Cancel adding card
     $('#kanbanBoard').on('click', '.cancel-card-btn', function () {
@@ -331,7 +325,7 @@ $(function () {
         $placeholder.show();
     });
 
-    // Save new card (Requires TaskController setup)
+    // Save new card 
     $('#kanbanBoard').on('click', '.save-card-btn', function () {
         const $entry = $(this).closest('.new-card-entry');
         const $input = $entry.find('.card-input');
@@ -351,9 +345,7 @@ $(function () {
                 method: 'POST',
                 data: {
                     title: cardTitle,
-                    // Bạn có thể gửi thêm các trường khác nếu form nhập liệu có, ví dụ:
-                    // description: $entry.find('.card-description-input').val(),
-                    _token: $('meta[name="csrf-token"]').attr('content') // Quan trọng: gửi CSRF token
+                    _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
                     console.log(response.task.id);
@@ -388,7 +380,6 @@ $(function () {
         }
     });
     $('#kanbanBoard').on('keypress', '.card-input', function (e) {
-        // Optional: Save on Enter (might need Shift+Enter for new lines)
         if (e.which == 13 && !e.shiftKey) {
             e.preventDefault();
             $(this).closest('.new-card-entry').find('.save-card-btn').click();
@@ -400,4 +391,4 @@ $(function () {
     initializeCardSortable();
     initializeColumnSortable();
 
-}); // End Document Ready
+}); 

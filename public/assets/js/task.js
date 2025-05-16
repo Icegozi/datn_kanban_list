@@ -465,7 +465,6 @@ var TaskJS = (function ($) {
 
     // --- Public methods của TaskJS ---
     return {
-        // ... (initializeSortableForColumn và initializeSortableForExistingColumns như cũ) ...
         initializeSortableForColumn: function ($columnContentElement) {
             if ($columnContentElement && $columnContentElement.length) {
                 $columnContentElement.sortable({
