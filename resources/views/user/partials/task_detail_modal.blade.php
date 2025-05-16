@@ -1,17 +1,16 @@
 <div class="modal fade" id="taskDetailModal" tabindex="-1" aria-labelledby="taskDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+    <div class="modal-dialog modal-xl  modal-dialog-scrollable" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-secondary text-light">
+            <div class="modal-header bg-dark text-light">
                 <h5 class="modal-title" id="modalTaskTitleHeader">Chi tiết công việc</h5>
                 <input type="hidden" id="modalTaskId">
-                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
+                <button type="button" class="close" style="color: #FF0000;" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fa-solid fa-xmark"></i></span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
-                        {{-- Cột Trái: Thông tin chính --}}
                         <div class="col-lg-8">
                             <p class="text-muted mb-1">
                                 Trong danh sách: <strong id="modalTaskColumnName">Tên Cột</strong>
@@ -23,18 +22,16 @@
                             </div>
 
                             <div class="mb-3">
-                                <h6 class="font-weight-bold text-secondary"><i
+                                <h6 class="font-weight-bold text-dark"><i
                                         class="fas fa-user-friends mr-2"></i>NGƯỜI PHỤ TRÁCH</h6>
                                 <div id="modalTaskAssignees" class="d-flex align-items-center flex-wrap">
                                     {{-- Ảnh avatar người tham gia sẽ được thêm vào đây bằng JS --}}
                                     <span class="text-muted small">Chưa có ai tham gia.</span>
                                 </div>
-                                {{-- <button class="btn btn-sm btn-outline-secondary mt-2 add-assignee-btn"><i
-                                        class="fas fa-plus"></i> Thêm</button> --}}
                             </div>
 
                             <div class="mb-3">
-                                <h6 class="font-weight-bold text-secondary"><i class="fas fa-align-left mr-2"></i>MÔ TẢ
+                                <h6 class="font-weight-bold text-dark"><i class="fas fa-align-left mr-2"></i>MÔ TẢ
                                 </h6>
                                 <div id="modalTaskDescriptionContainer">
                                     <div class="description-box-display p-2 border rounded bg-light"
@@ -52,7 +49,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <h6 class="font-weight-bold text-secondary"><i class="fas fa-paperclip mr-2"></i>ĐÍNH
+                                <h6 class="font-weight-bold text-dark"><i class="fas fa-paperclip mr-2"></i>ĐÍNH
                                     KÈM</h6>
                                 <div id="modalTaskAttachments">
                                     <p class="text-muted small">Chưa có đính kèm.</p>
@@ -62,7 +59,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <h6 class="font-weight-bold text-secondary">
+                                <h6 class="font-weight-bold text-dark">
                                     <i class="fas fa-tasks mr-2"></i>CHECKLIST
                                     <button class="btn btn-sm btn-outline-secondary py-0 px-1 ml-2"
                                         id="toggleChecklistVisibilityBtn" title="Hiện/Ẩn Checklist">
@@ -75,13 +72,13 @@
                                         {{-- Content will be loaded by JS --}}
                                         <p class="text-muted small">Bấm vào nút "Checklist" ở cột phải để quản lý.</p>
                                     </div>
-                                    <div class="add-checklist-item-form mt-2" style="display: none;"> {{-- Form also
+                                    <div class="add-checklist-item-form mt-4" style="display: none;"> {{-- Form also
                                         hidden initially --}}
                                         <div class="input-group input-group-sm">
                                             <input type="text" class="form-control" id="newChecklistItemTitle"
                                                 placeholder="Thêm mục mới...">
                                             <div class="input-group-append">
-                                                <button class="btn btn-primary" id="saveNewChecklistItemBtn"
+                                                <button class="btn btn-success" id="saveNewChecklistItemBtn"
                                                     type="button">Thêm</button>
                                             </div>
                                         </div>
@@ -90,7 +87,7 @@
                             </div>
                             <hr>
                             <div class="mb-3">
-                                <h6 class="font-weight-bold text-secondary"><i class="fas fa-comments mr-2"></i>BÌNH
+                                <h6 class="font-weight-bold text-dark"><i class="fas fa-comments mr-2"></i>BÌNH
                                     LUẬN</h6>
                                 <div class="add-comment-section mb-3">
                                     <div class="input-group">

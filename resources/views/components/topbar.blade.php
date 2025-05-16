@@ -43,19 +43,20 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item mt-2">
-            {{ Auth::user()->name }}
+        <li class="nav-item d-flex align-items-center">
+            <span class="nav-link">{{ Auth::user()->name }}</span>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" onclick="confirmLogout(event)">
+            <a class="nav-link d-flex align-items-center" href="#" onclick="confirmLogout(event)">
                 <i class="fas fa-sign-out-alt"></i>
             </a>
         </li>
-        <!-- Form ẩn -->
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
     </ul>
+
+    <!-- Form ẩn - Đặt ngoài UL -->
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        @csrf
+    </form>
 </nav>
 
 <script>

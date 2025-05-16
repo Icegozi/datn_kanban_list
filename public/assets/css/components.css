@@ -26,38 +26,91 @@ a.navbar-brand:focus {
     text-transform: capitalize;
 }
 
-/* Topbar */
-.main-header {
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
-    padding-right: 0;
-    border-radius: 0 !important;
-}
 
+/* ----------Top Bar--------- */
+/* Navbar tổng thể */
 .main-header.navbar {
-    background-color: #0f0b0b;
-    color: #ffffff;
-
-
+    background-color: #1c1c1c;
+    color: #dee2e6;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.main-header.navbar .nav-link,
-.main-header.navbar .navbar-brand,
-.main-header.navbar .nav-item a {
-    color: #ffffff;
+/* Bên trái navbar */
+.main-header .navbar-nav {
+    display: flex;
+    align-items: center;
 }
 
-.main-header.navbar .nav-link:hover,
-.main-header.navbar .navbar-brand:hover,
-.main-header.navbar .nav-item a:hover {
-    color: #ff545a !important;
-    cursor: pointer;
+/* Bên phải navbar */
+.navbar-nav.ml-auto {
+    display: flex;
+    align-items: center;
 }
 
-.main-header.navbar .navbar-brand span {
+/* Tên người dùng */
+.navbar-nav.ml-auto .nav-item {
+    margin-left: 15px;
+    font-weight: 500;
+    color: #dee2e6;
+    display: flex;
+    align-items: center;
+}
+
+/* Logout icon canh giữa */
+.navbar-nav.ml-auto .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    color: #dee2e6;
+}
+
+/* Logout icon */
+.navbar-nav.ml-auto .nav-link i {
+    font-size: 16px;
+}
+
+/* Dropdown item */
+.main-header .dropdown-item {
+    color: #212529;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+/* Hover dropdown item */
+.main-header .dropdown-item:hover {
+    background-color: #f1f1f1;
     color: #ff545a;
 }
+
+/* Hamburger icon */
+.main-header .nav-link i.fas.fa-bars {
+    font-size: 18px;
+    padding-right: 5px;
+}
+
+/* Link trong navbar */
+.main-header .nav-link {
+    color: #dee2e6;
+    font-size: 14px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+/* Hover link */
+.main-header .nav-link:hover {
+    color: #ff545a;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 5px;
+}
+
+
 
 /*-------------------------------------
         12. Footer

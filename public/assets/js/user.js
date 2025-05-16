@@ -145,17 +145,17 @@ $(document).ready(function () {
                 if (response.success) {
                     const $card = $(`#board-card-${boardId}`);
                     $card.find('.board-name').text(response.new_name);
-                    $card.find('.rename-board-link').data('name', response.new_name); // Update data attribute
-                    $card.find('.delete-board-link').data('name', response.new_name); // Update data attribute for delete confirmation
+                    $card.find('.rename-board-link').data('name', response.new_name);
+                    $card.find('.delete-board-link').data('name', response.new_name); 
 
                     if (response.updated_at_formatted) {
                         $card.find('.board-timestamp span').text(response.updated_at_formatted);
                     }
                     $('#renameBoardModal').modal('hide');
-                    // alert(response.message); //fix bug
+                    
                 } else {
                     alert(response.message || 'Không thể đổi tên bảng.');
-                    // Consider showing error within the modal
+                    
                 }
             },
             error: function (xhr) {
@@ -379,7 +379,7 @@ $(document).ready(function () {
                     }
                 }
             });
-        }, 10000); // 10 seconds
+        }, 10000); 
 
     } else {
         console.log("Sheep wrapper element not found. Sheep logic skipped.");

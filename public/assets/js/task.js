@@ -69,8 +69,7 @@ var TaskJS = (function ($) {
             description: taskData.description,
             // Lưu thêm các trường khác nếu cần so sánh
         };
-        console.log(taskData);
-        let columnColor = 'black'; // mặc định
+        let columnColor = 'black';
 
         switch (taskData.column_name) {
             case 'Đang làm':
@@ -547,4 +546,29 @@ $(function () {
     } else {
         console.error("TaskJS is not defined or init method is missing.");
     }
+
+    $('#taskDetailModal').on('shown.bs.modal', function () {
+        const $dialog = $(this).find('.modal-dialog');
+        const modalWidth = 1140;
+        const modalHeight = 900;
+        $dialog.css('display', 'block');
+        const winWidth = $(window).width();
+        const winHeight = $(window).height();
+        const top = Math.max((winHeight - modalHeight) / 2, 20);
+        const left = Math.max((winWidth - modalWidth) / 2, 20);
+        $dialog.css({
+            position: 'absolute',
+            width: modalWidth + 'px',
+            height: modalHeight + 'px',
+            top: top + 'px',
+            left: left + 'px',
+            margin: 0
+        }).draggable({
+            handle: ".modal-header"
+        });
+        $dialog.find('.modal-header').css('cursor', 'move');
+    });
+
+
+
 });

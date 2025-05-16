@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-sm-5">
                     <p>
-                        © 2025 MyApp
+                        © 2025 MyApp - Hà Xuân Phúc
                     </p>
                 </div>
                 <div class="col-sm-7">
