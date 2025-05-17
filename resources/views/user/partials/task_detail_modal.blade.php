@@ -142,9 +142,9 @@
 
                                 <h6 class="text-muted small font-weight-bold">HÀNH ĐỘNG</h6>
                                 <div class="list-group list-group-flush">
-                                    <a href="#" class="list-group-item list-group-item-action modal-action-btn"
+                                    {{-- <a href="#" class="list-group-item list-group-item-action modal-action-btn"
                                         id="modalMoveTaskTrigger"><i class="fas fa-arrow-right fa-fw mr-2"></i>Di
-                                        chuyển</a>
+                                        chuyển</a> --}}
                                     <a href="#" class="list-group-item list-group-item-action modal-action-btn"
                                         id="modalArchiveTaskTrigger"><i class="fas fa-archive fa-fw mr-2"></i>Lưu thay
                                         đổi</a>
