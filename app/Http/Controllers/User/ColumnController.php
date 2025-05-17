@@ -44,7 +44,7 @@ class ColumnController extends Controller
       */
      public function store(Request $request, Board $board)
      {
-         $this->authorizeBoardAccess($board,['board_viewer','board_editor','board_member_manager']);
+         $this->authorizeBoardAccess($board,['board_editor','board_member_manager']);
  
          $validated = $request->validate([
              'name' => [
@@ -137,42 +137,32 @@ class ColumnController extends Controller
          if ($column->board_id !== $board->id) {
               abort(404);
          }
- 
-          // --- Task Handling ---
-          // Simplest approach (due to cascade delete in migration): Warn if tasks exist.
-          // Advanced: Ask user how to handle tasks (move/delete).
-          // For now, we rely on cascade and just proceed after confirmation (done on frontend).
+
          if ($column->tasks()->exists()) {
-              // You could return a specific status or message if you want the frontend
-              // to show a more specific warning before the final confirmation.
-              // e.g., return response()->json(['success'=>false, 'message'=>'Cột này chứa công việc. Bạn có chắc muốn xoá? Mọi công việc sẽ bị mất.', 'has_tasks'=>true], 400);
+
          }
  
          try {
-             DB::beginTransaction(); // Start transaction for consistency
+             DB::beginTransaction(); 
  
              $deletedPosition = $column->position;
-             $column->delete(); // Cascade delete should handle tasks based on migration
+             $column->delete(); 
  
-             // Update positions of subsequent columns on the same board
              Column::where('board_id', $board->id)
                    ->where('position', '>', $deletedPosition)
                    ->decrement('position');
  
-             DB::commit(); // Commit transaction
+             DB::commit(); 
  
              return response()->json(['success' => true, 'message' => 'Cột đã được xoá thành công.']);
  
          } catch (\Exception $e) {
-             DB::rollBack(); // Rollback on error
-              \Log::error("Error deleting column {$column->id}: " . $e->getMessage());
+             DB::rollBack(); 
              return response()->json(['success' => false, 'message' => 'Không thể xoá cột. Đã xảy ra lỗi.'], 500);
          }
      }
  
-     /**
-      * Update the order of columns.
-      */
+
      public function reorder(Request $request, Board $board)
      {
         $this->authorizeBoardAccess($board,['board_editor','board_member_manager']);

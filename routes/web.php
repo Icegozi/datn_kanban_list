@@ -47,9 +47,6 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard riêng cho user thường
     Route::get('/user/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
-    // Route::resource('boards', BoardController::class)->except([
-    //     'index', 'create', 'edit' 
-    // ])->middleware('auth');
     Route::resource('boards', BoardController::class)->except([
         'index',
         'create',
@@ -58,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/boards', [BoardController::class, 'store'])->name('boards.store');
 
-    // Column Routes (Nested under boards)
+    // Column Routes 
     Route::post('/boards/{board}/columns', [ColumnController::class, 'store'])->name('columns.store');
     Route::put('/boards/{board}/columns/{column}', [ColumnController::class, 'update'])->name('columns.update');
     Route::delete('/boards/{board}/columns/{column}', [ColumnController::class, 'destroy'])->name('columns.destroy');

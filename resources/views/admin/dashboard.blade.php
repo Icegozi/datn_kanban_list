@@ -2,10 +2,6 @@
 
 @section('title', 'Thống kê người dùng')
 
-<!-- Flatpickr CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<!-- Flatpickr locale tiếng Việt -->
-
 <style>
     #userRegistrationChartContainer {
         position: relative;

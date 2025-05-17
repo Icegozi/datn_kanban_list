@@ -43,7 +43,7 @@ class AttachmentController extends Controller
         $this->authorizeTaskAccess($task,['board_editor','board_member_manager']);
         $request->validate([
             'attachments'   => 'required|array',
-            'attachments.*' => 'file|max:10240', // max 10MB per file, ví dụ: mimes:jpg,png,pdf,doc,docx,xls,xlsx
+            'attachments.*' => 'file|max:10240', 
         ]);
 
         $uploadedAttachmentsData = [];
@@ -164,7 +164,7 @@ class AttachmentController extends Controller
             $originalName = $attachment->file_name;
             $attachment->delete();
 
-            if ($task && $task->taskHistories()) { // Kiểm tra task và taskHistories
+            if ($task && $task->taskHistories()) { 
                 $task->taskHistories()->create([
                     'user_id' => Auth::id(),
                     'action'  => 'attachment_deleted',

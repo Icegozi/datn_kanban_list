@@ -33,7 +33,6 @@ class TaskController extends Controller
     private function authorizeBoardAccess(Board $board, array $requiredPermissions = [])
     {
         $user = Auth::user();
-        // Kiểm tra nếu người dùng có một trong các quyền yêu cầu
         foreach ($requiredPermissions as $permission) {
             if ($user->hasBoardPermission($board, $permission)) {
                 return $board;
@@ -42,6 +41,8 @@ class TaskController extends Controller
 
         abort(403, 'Bạn không có quyền thực hiện thao tác!');
     }
+
+
     public function store(TaskRequest $request, Column $column)
     {
         $board = $column->board;
@@ -124,7 +125,6 @@ class TaskController extends Controller
             });
         } else {
             $task->task_histories = collect([]);
-            Log::warning("Task ID {$task->id}: task_histories was not a collection, possibly null or load issue.");
         }
 
         if ($task->comments instanceof \Illuminate\Database\Eloquent\Collection) {
@@ -139,10 +139,7 @@ class TaskController extends Controller
             Log::warning("Task ID {$task->id}: comments was not a collection, possibly null or load issue.");
         }
 
-        // Format checklists if they exist
         if ($task->checklists instanceof \Illuminate\Database\Eloquent\Collection) {
-            // No need to transform here if the Checklist model's $casts and $appends handle it well
-            // Or if you want specific formatting:
             $task->checklists->transform(function ($item) {
                 return [
                     'id' => $item->id,

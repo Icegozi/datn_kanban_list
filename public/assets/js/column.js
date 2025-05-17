@@ -1,11 +1,7 @@
 $(function () {
-    const boardId = $('#kanbanBoard').data('board-id'); // Get board ID
-
-    // --- Helper Functions ---
+    const boardId = $('#kanbanBoard').data('board-id'); 
     function showNotification(message, type = 'success') {
-        // Replace with a proper notification library like Toastr later
-        alert(type.toUpperCase() + ": " + message);
-        console.log(type.toUpperCase() + ": " + message);
+        alert(message);
     }
 
     function getRoute(routeName, params = {}) {
@@ -311,13 +307,12 @@ $(function () {
                 }
             },
             error: function (jqXHR) {
-                showNotification('Error deleting column: ' + (jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
+                showNotification((jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
                 $button.prop('disabled', false); 
             }
         });
     });
 
-    // Cancel adding card
     $('#kanbanBoard').on('click', '.cancel-card-btn', function () {
         const $entry = $(this).closest('.new-card-entry');
         const $placeholder = $entry.siblings('.add-card-placeholder');

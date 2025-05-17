@@ -28,59 +28,50 @@ var AttachmentManager = (function ($) {
     }
 
     function showNotification(message, type = 'success') {
-        // Đơn giản hóa bằng alert, bạn có thể thay thế bằng thư viện notification xịn hơn
-        alert((type === 'error' ? 'Lỗi: ' : 'Thành công: ') + message);
+        alert(message);
         console.log(type.toUpperCase() + ": " + message);
     }
-    // --- End Helper Functions ---
 
-    let $fileInput; // Biến giữ đối tượng input file ẩn
+    let $fileInput; 
 
-    // Đảm bảo input file tồn tại và khởi tạo sự kiện cho nó
     function ensureFileInput() {
         if (!$fileInput || $fileInput.length === 0) {
             $fileInput = $('#taskAttachmentFileInput');
-            if ($fileInput.length === 0) { // Nếu chưa có, tạo mới
+            if ($fileInput.length === 0) { 
                 $fileInput = $('<input type="file" id="taskAttachmentFileInput" multiple style="display: none;">');
-                $('body').append($fileInput); // Thêm vào body để có thể hoạt động
+                $('body').append($fileInput);
             }
-            // Gắn sự kiện 'change' chỉ một lần
             $fileInput.off('change.attachmentManager').on('change.attachmentManager', handleFileSelection);
         }
         return $fileInput;
     }
 
-    // Xử lý khi người dùng chọn file
     function handleFileSelection(event) {
         const files = event.target.files;
         if (!files || files.length === 0) return;
 
         const $attachmentsContainer = $('#modalTaskAttachments');
-        // Xóa thông báo "Chưa có đính kèm" nếu là lần đầu thêm file
         if ($attachmentsContainer.find('.no-attachments-message').length > 0) {
             $attachmentsContainer.empty();
         }
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            // Kiểm tra trùng lặp trong stagedFiles trước khi thêm
+
             if (!stagedFiles.find(f => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified)) {
                 stagedFiles.push(file);
                 renderStagedFile(file, $attachmentsContainer);
             }
         }
 
-        // Hiển thị nút "Tải lên" nếu có file trong danh sách chờ
         if (stagedFiles.length > 0 && $('#uploadNewAttachmentsBtn').length === 0) {
             const $uploadBtn = $('<button id="uploadNewAttachmentsBtn" class="btn btn-sm btn-primary mt-2 mb-2"><i class="fas fa-upload mr-1"></i>Tải lên các tệp đã chọn</button>');
             $attachmentsContainer.append($uploadBtn);
         }
 
-        // Reset input file để cho phép chọn lại cùng file nếu đã xóa khỏi staged list
         $(this).val('');
     }
 
-    // Hiển thị file đang chờ tải lên (staged)
     function renderStagedFile(file, container) {
         const uniqueId = 'staged-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
         const fileSizeKB = (file.size / 1024).toFixed(1);
@@ -104,12 +95,12 @@ var AttachmentManager = (function ($) {
             $fileElement.remove();
             if (stagedFiles.length === 0) {
                 $('#uploadNewAttachmentsBtn').remove();
-                if (container.find('.attachment-item').length === 0) { // Nếu không còn file nào (cả staged và existing)
+                if (container.find('.attachment-item').length === 0) {
                     container.html('<p class="text-muted small no-attachments-message">Chưa có đính kèm.</p>');
                 }
             }
         });
-        // Thêm vào đầu danh sách hoặc trước nút Upload nếu có
+
         const $uploadBtn = container.find('#uploadNewAttachmentsBtn');
         if ($uploadBtn.length > 0) {
             $fileElement.insertBefore($uploadBtn);
@@ -118,10 +109,9 @@ var AttachmentManager = (function ($) {
         }
     }
 
-    // Hiển thị file đã có trên server
     function renderExistingAttachment(attachment, container) {
-        const fileSizeKB = attachment.formatted_capacity; // Sử dụng accessor mới nếu bạn đã đổi tên, hoặc tính toán lại
-        const fileIcon = attachment.icon_class; // Lấy từ accessor
+        const fileSizeKB = attachment.formatted_capacity; 
+        const fileIcon = attachment.icon_class; 
         const downloadUrl = `/attachments/${attachment.id}/download`; 
 
         const $fileElement = $(`
@@ -161,11 +151,10 @@ var AttachmentManager = (function ($) {
     }
 
 
-    // Tải và hiển thị danh sách các file đính kèm đã có
     function loadAndRenderExistingAttachments(taskId) {
-        setCurrentTaskId(taskId); // Cập nhật ID task hiện tại
-        stagedFiles = []; // Xóa các file đang chờ tải lên (nếu có từ lần mở modal trước)
-        $('#uploadNewAttachmentsBtn').remove(); // Xóa nút tải lên (nếu có)
+        setCurrentTaskId(taskId); 
+        stagedFiles = []; 
+        $('#uploadNewAttachmentsBtn').remove(); 
 
         const $attachmentsContainer = $('#modalTaskAttachments');
         $attachmentsContainer.html('<p class="text-muted small"><i class="fas fa-spinner fa-spin"></i> Đang tải đính kèm...</p>');
@@ -201,7 +190,6 @@ var AttachmentManager = (function ($) {
         });
     }
 
-    // Tải các file đã chọn (stagedFiles) lên server
     function uploadStagedFiles() {
         if (stagedFiles.length === 0) {
             showNotification('Không có tệp nào được chọn để tải lên.', 'info');
@@ -214,9 +202,9 @@ var AttachmentManager = (function ($) {
         }
 
         const formData = new FormData();
-        formData.append('_token', $('meta[name="csrf-token"]').attr('content')); // CSRF Token
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content')); 
         stagedFiles.forEach((file) => {
-            formData.append('attachments[]', file, file.name); // Gửi dưới dạng mảng 'attachments[]'
+            formData.append('attachments[]', file, file.name); 
         });
 
         const $uploadBtn = $('#uploadNewAttachmentsBtn');
@@ -233,18 +221,14 @@ var AttachmentManager = (function ($) {
             url: url,
             method: 'POST',
             data: formData,
-            contentType: false, // Quan trọng: không set contentType header
-            processData: false, // Quan trọng: không xử lý data
+            contentType: false, 
+            processData: false, 
             success: function(response) {
                 if (response.success) {
                     showNotification(response.message || 'Tải lên tệp đính kèm thành công!', 'success');
-                    // Xóa các file đã staged và UI liên quan
                     $('#modalTaskAttachments .attachment-item[data-staged-id]').remove();
                     stagedFiles = [];
                     $uploadBtn.remove();
-
-                    // Tải lại toàn bộ danh sách đính kèm để hiển thị file mới (hoặc chỉ thêm file mới nếu API trả về thông tin file vừa upload)
-                    // Đơn giản nhất là tải lại toàn bộ:
                     loadAndRenderExistingAttachments(currentTaskIdForAttachment);
                 } else {
                     showNotification(response.message || 'Lỗi khi tải lên tệp.', 'error');
@@ -260,12 +244,10 @@ var AttachmentManager = (function ($) {
                 showNotification(errorMsg, 'error');
             },
             complete: function() {
-                // Đảm bảo nút upload được kích hoạt lại nếu nó vẫn còn trên DOM (ví dụ: nếu upload lỗi)
                 const $btn = $('#uploadNewAttachmentsBtn');
                 if ($btn.length > 0) {
                     $btn.prop('disabled', false).html('<i class="fas fa-upload mr-1"></i>Tải lên các tệp đã chọn');
                 }
-                // Nếu sau khi upload, không còn file nào (cả staged và existing), hiển thị lại thông báo
                 if ($('#modalTaskAttachments .attachment-item').length === 0 && $('#uploadNewAttachmentsBtn').length === 0) {
                     $('#modalTaskAttachments').html('<p class="text-muted small no-attachments-message">Chưa có đính kèm.</p>');
                 }
@@ -273,7 +255,6 @@ var AttachmentManager = (function ($) {
         });
     }
 
-    // Xóa file đính kèm đã có trên server
     function deleteAttachmentFromServer(attachmentId, $elementToRemove) {
         if (!confirm('Bạn có chắc chắn muốn xóa tệp đính kèm này không?')) {
             return;
@@ -286,43 +267,39 @@ var AttachmentManager = (function ($) {
         }
 
         const $deleteButton = $elementToRemove.find('.delete-existing-attachment-btn');
-        $deleteButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>'); // Hiệu ứng loading
+        $deleteButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>'); 
 
         $.ajax({
             url: url,
             method: 'DELETE',
-            data: { _token: $('meta[name="csrf-token"]').attr('content') }, // CSRF Token
+            data: { _token: $('meta[name="csrf-token"]').attr('content') }, 
             dataType: 'json',
             success: function(response) {
                 if (response.success) {
                     showNotification(response.message || 'Đã xóa tệp đính kèm.', 'success');
                     $elementToRemove.fadeOut(300, function() {
                         $(this).remove();
-                        // Nếu không còn file nào, hiển thị thông báo
                         if ($('#modalTaskAttachments .attachment-item').length === 0) {
                             $('#modalTaskAttachments').html('<p class="text-muted small no-attachments-message">Chưa có đính kèm.</p>');
                         }
                     });
                 } else {
                     showNotification(response.message || 'Lỗi khi xóa tệp đính kèm.', 'error');
-                    $deleteButton.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>'); // Reset nút
+                    $deleteButton.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>'); 
                 }
             },
             error: function(jqXHR) {
                 showNotification((jqXHR.responseJSON?.message || jqXHR.statusText), 'error');
-                $deleteButton.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>'); // Reset nút
+                $deleteButton.prop('disabled', false).html('<i class="fas fa-trash-alt"></i>'); 
             }
         });
     }
 
-    // Khởi tạo các listener
     function init() {
-        ensureFileInput(); // Tạo input file ẩn nếu chưa có
+        ensureFileInput(); 
 
-        // Sự kiện click vào nút "Đính kèm" trong modal
         $(document).on('click', '#modalAddAttachmentTrigger', function(e) {
             e.preventDefault();
-            // Lấy task ID từ modal nếu chưa có (quan trọng để biết upload cho task nào)
             if (!currentTaskIdForAttachment) {
                 const modalTaskId = $('#modalTaskId').val();
                 if (modalTaskId) {
@@ -333,42 +310,37 @@ var AttachmentManager = (function ($) {
                     return;
                 }
             }
-            $fileInput.click(); // Kích hoạt input file ẩn
+            $fileInput.click(); 
         });
 
-        // Sự kiện click vào nút "Tải lên các tệp đã chọn" (nút này được tạo động)
         $(document).on('click', '#uploadNewAttachmentsBtn', function() {
             uploadStagedFiles();
         });
 
-        // Reset trạng thái khi modal đóng (quan trọng để không bị rò rỉ dữ liệu giữa các lần mở modal)
         $('#taskDetailModal').on('hidden.bs.modal', function () {
             stagedFiles = [];
             if ($fileInput) {
-                 $fileInput.val(''); // Xóa lựa chọn file cũ trong input
+                 $fileInput.val('');
             }
             $('#modalTaskAttachments').html('<p class="text-muted small no-attachments-message">Chưa có đính kèm.</p>'); // Reset view
-            currentTaskIdForAttachment = null; // Reset ID task
+            currentTaskIdForAttachment = null; 
         });
 
         console.log("AttachmentManager initialized.");
     }
 
-    // Hàm public để TaskJS có thể gọi
     function setCurrentTaskId(taskId) {
         currentTaskIdForAttachment = taskId;
     }
 
-    // Public API của module
     return {
         init: init,
-        loadAttachments: loadAndRenderExistingAttachments, // Để TaskJS gọi khi mở modal
-        setCurrentTaskId: setCurrentTaskId // Để TaskJS cập nhật Task ID khi cần
+        loadAttachments: loadAndRenderExistingAttachments, 
+        setCurrentTaskId: setCurrentTaskId 
     };
 
 })(jQuery);
 
-// Khởi tạo AttachmentManager khi tài liệu sẵn sàng
 $(document).ready(function() {
     if (typeof AttachmentManager !== 'undefined' && AttachmentManager.init) {
         AttachmentManager.init();
