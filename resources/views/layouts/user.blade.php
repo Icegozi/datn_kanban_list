@@ -28,10 +28,10 @@
         {{-- Topbar --}}
         @include('components.topbar') {{-- Sẽ tạo ở dưới --}}
         
-        <div class="d-flex flex-grow-1">
+        <div class="d-flex flex-grow-1 client-bg" >
             @include('components.sidebar')
             {{-- Content --}}
-            <div class="content-wrapper flex-grow-1 p-3">
+            <div class="content-wrapper flex-grow-1 p-3" >
                 <div class="sheep-wrapper" id="draggable-sheep">
                     <div class="sheep">
                         <div class="wool"></div>

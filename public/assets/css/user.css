@@ -11,13 +11,6 @@ body {
     flex-direction: column;
 }
 
-.content-wrapper {
-    flex: 1;
-    padding: 20px;
-    background: #ffffff;
-}
-
-
 html,
 body {
     height: 100%;
@@ -33,7 +26,10 @@ body {
 .content-wrapper {
     flex: 1;
     padding: 20px;
-    background: #fff;
+    background-image: url('../img/bg-uocmo2.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
 }
 
 
@@ -264,12 +260,16 @@ body {
 /* Add custom styles here if needed */
 .card-hover:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important; /* Stronger shadow on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    /* Stronger shadow on hover */
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
- .dropdown-toggle-no-caret::after {
-    display: none; /* Hide default caret */
+
+.dropdown-toggle-no-caret::after {
+    display: none;
+    /* Hide default caret */
 }
+
 /* Basic Overlay Styles (if keeping sheep feature) */
 #cardOverlay {
     position: fixed;
@@ -279,33 +279,36 @@ body {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 1050;
-    display: none; 
+    display: none;
     align-items: center;
     justify-content: center;
     color: white;
     text-align: center;
 }
+
 .overlay-content {
     background-color: #fff;
     color: #333;
     padding: 30px;
     border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
- .overlay-close-btn {
-     background-color: #007bff;
-     color: white;
-     border: none;
-     padding: 10px 20px;
-     border-radius: 4px;
-     cursor: pointer;
-     margin-top: 15px;
- }
- .overlay-close-btn:hover {
-     background-color: #0056b3;
- }
 
- /*rename board*/
+.overlay-close-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.overlay-close-btn:hover {
+    background-color: #0056b3;
+}
+
+/*rename board*/
 
 
 /*checklist*/
@@ -314,20 +317,38 @@ body {
 }
 
 .checklist-item .checklist-item-title {
-    cursor: pointer; 
-    padding: 0.25rem 0; 
+    cursor: pointer;
+    padding: 0.25rem 0;
     display: inline-block;
     width: calc(100% - 20px);
 }
+
 .checklist-item .form-check {
-    display: flex; 
+    display: flex;
     align-items: center;
 }
+
 .checklist-item .form-check-input {
-    margin-top: 0; 
+    margin-top: 0;
     margin-right: 0.5rem;
 }
-.checklist-item-actions, .checklist-item-edit-controls {
+
+.checklist-item-actions,
+.checklist-item-edit-controls {
     white-space: nowrap;
 }
 
+.bg {
+    background-image: url('../img/bg-uocmo2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; 
+    background-attachment: fixed;
+    height: 100vh; 
+    margin: 0;
+    border-right: 1px solid rgb(101, 79, 79);
+}
+
+.active{
+    color: #ffffff;
+}

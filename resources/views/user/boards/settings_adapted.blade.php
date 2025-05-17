@@ -6,7 +6,7 @@
     <div class="container-fluid mt-4 mb-5"> {{-- Use container-fluid for more space if needed --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h1 class="h3 mb-0 text-gray-800">
+                <h1 class="h3 mb-0 text-gray-800 text-white">
                     <span class="font-weight-bold">{{ $board->name }}</span>
                 </h1>
             </div>

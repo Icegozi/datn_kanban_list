@@ -1,4 +1,4 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px; height: auto;">
+<div class="d-flex flex-column flex-shrink-0 p-3 bg" style="width: 250px; height: auto; ">
     <!-- Logo -->
         <a class="navbar-brand" href="#">My<span>App</span></a>
     <hr>

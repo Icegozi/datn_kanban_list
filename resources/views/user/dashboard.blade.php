@@ -5,7 +5,7 @@
 
         <div class="row mb-3 align-items-center">
             <div class="col-md-12 text-md-left">
-                <button class="btn btn-outline-success" id="add-board-btn">
+                <button class="btn btn-outline-success text-white" id="add-board-btn">
                     <i class="fas fa-plus mr-1"></i> Tạo bảng mới
                 </button>
             </div>

@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- Board Header (Optional: Add board rename/delete controls here later) --}}
-<div class="board-header p-3 mb-2 ml-2 border-bottom">
+<div class="board-header p-3 mb-2 ml-2 border-bottom text-white">
     <h3>{{ $board->name }}</h3>
     {{-- Add board description if available: <p class="text-muted">{{ $board->description }}</p> --}}
 </div>
@@ -57,7 +57,7 @@
 
     {{-- Placeholder/Button to Add New Column --}}
     <div class="kanban-column add-column-trigger" style="flex: 0 0 300px; background: transparent; box-shadow: none; padding: 0;">
-         <div class="add-column-placeholder h-10" id="addColumnBtn">
+         <div class="add-column-placeholder h-10 text-white" id="addColumnBtn">
             THÊM CỘT
 
         </div>

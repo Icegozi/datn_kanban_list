@@ -26,7 +26,7 @@
         {{-- Topbar --}}
         @include('components.admin_topbar')
 
-        <div class="d-flex flex-grow-1">
+        <div class="d-flex flex-grow-1" id="admin-bg">
             @include('components.admin_sidebar')
             {{-- Content --}}
             <div class="content-wrapper flex-grow-1 p-3">
