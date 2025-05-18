@@ -27,12 +27,12 @@
     <div class="wrapper d-flex flex-column min-vh-100">
 
         {{-- Topbar --}}
-        @include('components.topbar') {{-- Sẽ tạo ở dưới --}}
-        
-        <div class="d-flex flex-grow-1 client-bg" >
+        @include('components.topbar')
+
+        <div class="d-flex flex-grow-1 client-bg">
             @include('components.sidebar')
             {{-- Content --}}
-            <div class="content-wrapper flex-grow-1 p-3" >
+            <div class="content-wrapper flex-grow-1 p-3">
                 <div class="sheep-wrapper" id="draggable-sheep">
                     <div class="sheep">
                         <div class="wool"></div>
@@ -81,7 +81,7 @@
             boardsInvitationsCancel: @json(route('boards.invitations.cancel', ['board' => ':boardIdPlaceholder', 'invitation' => ':invitationIdPlaceholder'])),
             invitationsAccept: @json(route('invitations.accept', ['token' => ':tokenPlaceholder'])),
         };
-        window.boardId =  @json(isset($board) ? $board->id : null);
+        window.boardId = @json(isset($board) ? $board->id : null);
         window.csrfToken = "{{ csrf_token() }}";
     </script>
 </body>

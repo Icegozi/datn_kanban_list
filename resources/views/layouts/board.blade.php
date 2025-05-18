@@ -10,15 +10,15 @@
     <!-- Fonts and Icons -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/fontawesome-free/css/all.min.css') }}">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/OverlayScrollbars.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/adminlte.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/column.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/OverlayScrollbars.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/adminlte.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/column.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/jquery/jquery-ui.css') }}">
 
 </head>
 
@@ -45,11 +45,11 @@
 
     {{-- Scripts --}}
     {{-- Scripts --}}
-    <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/jquery-ui.min.js') }}"></script> {{-- Make sure jQuery UI is loaded BEFORE
+    <script src="{{ asset_min('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset_min('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/jquery-ui.min.js') }}"></script> {{-- Make sure jQuery UI is loaded BEFORE
     column.js --}}
-    <script src="{{ asset('assets/js/adminlte.js') }}"></script>
+    <script src="{{ asset_min('assets/js/adminlte.js') }}"></script>
     <script>
         // Add CSRF token for AJAX
         $.ajaxSetup({
@@ -82,7 +82,7 @@
             attachmentsStoreBase: @json(route('attachments.store', ['task' => ':taskIdPlaceholder'])),
             attachmentsDestroyBase: @json(route('attachments.destroy', ['attachment' => ':attachmentIdPlaceholder'])),
 
-             // --- Checklist Routes ---
+            // --- Checklist Routes ---
             checklistsIndexBase: @json(route('checklists.index', ['task' => ':taskIdPlaceholder'])),
             checklistsStoreBase: @json(route('checklists.store', ['task' => ':taskIdPlaceholder'])),
             checklistsUpdateBase: @json(route('checklists.update', ['checklist' => ':checklistIdPlaceholder'])),
@@ -99,19 +99,19 @@
         // Trong resources/views/layouts/board.blade.php
         window.currentBoardId = @json(isset($board) ? $board->id : null);
     </script>
-    <script src="{{ asset('assets/js/column.js') }}"></script>
-    <script src="{{ asset('assets/js/task.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/dayjs.min.js')}}"></script>
-    <script src="{{ asset('assets/js/comment.js')}}"></script>
-    <script src="{{ asset('assets/js/due_date.js')}}"></script>
-    <script src="{{ asset('assets/js/attackment.js')}}"></script>
-    <script src="{{ asset('assets/js/checklist.js') }}"></script>
-    <script src="{{ asset('assets/js/assignee.js')}}"></script>
+    <script src="{{ asset_min('assets/js/column.js') }}"></script>
+    <script src="{{ asset_min('assets/js/task.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/dayjs.min.js') }}"></script>
+    <script src="{{ asset_min('assets/js/comment.js') }}"></script>
+    <script src="{{ asset_min('assets/js/due_date.js') }}"></script>
+    <script src="{{ asset_min('assets/js/attackment.js') }}"></script>
+    <script src="{{ asset_min('assets/js/checklist.js') }}"></script>
+    <script src="{{ asset_min('assets/js/assignee.js') }}"></script>
     {{-- Include modal HTML --}}
-    @include('user.partials.task_detail_modal') 
-   
+    @include('user.partials.task_detail_modal')
 
-    
+
+
 </body>
 
 </html>

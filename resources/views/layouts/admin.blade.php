@@ -10,14 +10,14 @@
     <!-- Fonts and Icons -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/fontawesome-free/css/all.min.css') }}">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/adminlte.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/admin.css') }}">
-    <link rel="stylesheet" href="{{asset('assets/css/flatpickr.min.css')}}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/jquery/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/flatpickr.min.css') }}">
 </head>
 
 <body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed" style="height: 100%;">
@@ -42,13 +42,13 @@
     </div>
 
     {{-- Scripts --}}
-    <script src="{{ asset('plugins/jquery/chart.umd.min.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/chartjs-adapter-date-fns.bundle.min.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/vn.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/flatpickr.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/adminlte.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/chart.umd.min.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/chartjs-adapter-date-fns.bundle.min.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/vn.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/flatpickr.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset_min('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset_min('assets/js/adminlte.js') }}"></script>
     <script>
         window.routeUrls = {
             userIndex: @json(route('admin.user.index')),
@@ -60,9 +60,9 @@
         };
         window.csrfToken = "{{ csrf_token() }}";
     </script>
-    <script src="{{ asset('assets/js/admin.js') }}"></script>
-    <script src="{{ asset('plugins/jquery/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('assets/js/permission.js') }}"></script>
+    <script src="{{ asset_min('assets/js/admin.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset_min('assets/js/permission.js') }}"></script>
 </body>
 
 </html>
