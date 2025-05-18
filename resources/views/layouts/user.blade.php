@@ -13,12 +13,13 @@
     <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/OverlayScrollbars.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/adminlte.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/user.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
-    <link rel="stylesheet" href="{{ asset('plugins/jquery/jquery-ui.css')}}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/fontawesome-free/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/OverlayScrollbars.min.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/adminlte.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/user.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset_min('plugins/jquery/jquery-ui.css') }}">
 
 </head>
 
@@ -59,9 +60,13 @@
     </div>
 
     {{-- Scripts --}}
-    <script src="{{ asset('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/adminlte.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset_min('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset_min('assets/js/adminlte.js') }}"></script>
+    <script src="{{ asset_min('assets/js/user.js') }}"></script>
+    <script src="{{ asset_min('plugins/jquery/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset_min('assets/js/permission.js') }}"></script>
+
     <script>
         window.routeUrls = {
             boardsStore: @json(route('boards.store')),
@@ -79,11 +84,6 @@
         window.boardId =  @json(isset($board) ? $board->id : null);
         window.csrfToken = "{{ csrf_token() }}";
     </script>
-    <script src="{{ asset('assets/js/user.js')}}"></script>
-    <script src="{{ asset('plugins/jquery/jquery-ui.min.js')}}"></script>
-    <script src="{{ asset('assets/js/permission.js') }}"></script>
-
-
 </body>
 
 </html>
